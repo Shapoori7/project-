@@ -1,28 +1,23 @@
 package controller;
 
 import model.User;
-import view.Menu;
 import view.WelcomeMenu;
 
 import java.util.HashMap;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 
 public class AuthController extends BaseController {
-    private final Menu menu;
-    private final Scanner scanner;
     private final HashMap<String, String> patterns;
 
     public AuthController() {
         super();
-        this.scanner = new Scanner(System.in).useDelimiter("\n");
 
         this.patterns = new HashMap<>();
         this.patterns.put("signUp", "user\\s+creat\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)");
         this.patterns.put("login", "Login\\s+(\\S+)\\s+(\\S+)$");
 
         this.menu = new WelcomeMenu();
-        this.menu.show();
+
     }
 
     public void signUp(Matcher matcher) {
@@ -41,7 +36,7 @@ public class AuthController extends BaseController {
             commandHandler();
         }
 
-        else if (dbCtrl.findUserByUsername(email) != null) {
+        else if (dbCtrl.findUserByEmail(email) != null) {
             this.menu.showError("User with this email already exists!");
             commandHandler();
         }
@@ -55,7 +50,7 @@ public class AuthController extends BaseController {
             User user = new User(username, password1, email);
             dbCtrl.saveUser(user);
             this.menu.showResponse("user created successfully!");
-            // change menu
+            showMenu("MainMenu");
         }
 
     }
@@ -76,11 +71,12 @@ public class AuthController extends BaseController {
         }
         else {
             this.menu.showResponse("user logged in successfully!");
-            // change menu
+            showMenu("MainMenu");
         }
 
     }
 
+    @Override
     public void commandHandler() {
         String command = scanner.nextLine();
         HashMap<String, Matcher> result = checkCommand(this.patterns, command);
