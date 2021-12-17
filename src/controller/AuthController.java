@@ -81,14 +81,15 @@ public class AuthController extends BaseController {
         String command = scanner.nextLine();
         HashMap<String, Matcher> result = checkCommand(this.patterns, command);
         if (result == null) {
-            menu.showError("error: ");
+            menu.showError("error: invalid input from you!");
             commandHandler();
         }
         else {
             String key = result.entrySet().iterator().next().getKey();
+            Matcher matcher = result.get(key);
             switch (key) {
-                case "signUp" -> signUp(result.get(key));
-                case "login" -> login(result.get(key));
+                case "signUp" -> signUp(matcher);
+                case "login" -> login(matcher);
             }
 
         }
