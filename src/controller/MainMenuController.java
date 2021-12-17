@@ -18,7 +18,7 @@ public class MainMenuController extends BaseController {
         this.patterns.put("changeUsername", "");
         this.patterns.put("showTeams", "");
         this.patterns.put("showTeam", "");
-        this.patterns.put("myProfile", "");
+        this.patterns.put("myProfile", "Profile --show --myProfile");
         this.patterns.put("showLogs", "");
         this.patterns.put("showNotifications", "");
 
@@ -84,6 +84,10 @@ public class MainMenuController extends BaseController {
 
     }
 
+    public void myProfile() {
+        this.menu.showResponse(client.toString());
+    }
+
     @Override
     public void commandHandler() {
         String command = Controller.INPUT.nextLine();
@@ -99,6 +103,7 @@ public class MainMenuController extends BaseController {
                 case "enterMenu" -> showMenu(matcher.group());
                 case "changePassword" -> changePassword(matcher);
                 case "changeUsername" -> changeUsername(matcher);
+                case "myProfile" -> myProfile();
 
             }
 
