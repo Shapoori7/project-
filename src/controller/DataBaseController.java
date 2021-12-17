@@ -64,6 +64,8 @@ public class DataBaseController {
 
     public void dbInitializer() {
         ArrayList<User> users = new ArrayList<>();
+        User user = new User("test", "pass", "test@gmail.com");
+        users.add(user);
         File f = new File("src/db/Users.txt");
 
         try(FileOutputStream fos = new FileOutputStream(f);
