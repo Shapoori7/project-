@@ -31,12 +31,12 @@ public class AuthController extends BaseController {
             commandHandler();
         }
 
-        else if (dbCtrl.findUserByUsername(username) != null) {
+        else if (Controller.DATA_BASE_CONTROLLER.findUserByUsername(username) != null) {
             this.menu.showError("user with username " + username + " already exists!");
             commandHandler();
         }
 
-        else if (dbCtrl.findUserByEmail(email) != null) {
+        else if (Controller.DATA_BASE_CONTROLLER.findUserByEmail(email) != null) {
             this.menu.showError("User with this email already exists!");
             commandHandler();
         }
@@ -48,7 +48,8 @@ public class AuthController extends BaseController {
 
         else {
             User user = new User(username, password1, email);
-            dbCtrl.saveUser(user);
+            Controller.DATA_BASE_CONTROLLER.saveUser(user);
+            setClient(user);
             this.menu.showResponse("user created successfully!");
             showMenu("MainMenu");
         }
@@ -59,7 +60,7 @@ public class AuthController extends BaseController {
         String username = matcher.group(1);
         String password = matcher.group(2);
 
-        User user = dbCtrl.findUserByUsername(username);
+        User user = Controller.DATA_BASE_CONTROLLER.findUserByUsername(username);
 
         if (user == null) {
             this.menu.showError("There is not any user with username: " + username + "!");
@@ -71,6 +72,7 @@ public class AuthController extends BaseController {
         }
         else {
             this.menu.showResponse("user logged in successfully!");
+            setClient(user);
             showMenu("MainMenu");
         }
 
@@ -78,7 +80,7 @@ public class AuthController extends BaseController {
 
     @Override
     public void commandHandler() {
-        String command = scanner.nextLine();
+        String command = Controller.INPUT.nextLine();
         HashMap<String, Matcher> result = checkCommand(this.patterns, command);
         if (result == null) {
             menu.showError("error: invalid input from you!");

@@ -1,32 +1,21 @@
 package controller;
 
+import model.User;
 import view.Menu;
 
 import java.util.HashMap;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BaseController {
-    protected DataBaseController dbCtrl;
     protected Menu menu;
-    protected Scanner scanner;
-    private final HashMap<String, BaseController> controllers;
+    protected User client;
 
-    public BaseController() {
-        this.controllers = new HashMap<>();
-        this.dbCtrl = new DataBaseController();
-        this.scanner = new Scanner(System.in).useDelimiter("\n");
-    }
-
-    public void init() {
-        this.controllers.put("WelcomeMenu", new AuthController());
-        this.controllers.put("MainMenu", new MainMenuController());
-    }
+    public BaseController() {}
 
     public void showMenu(String menuName) {
-        this.controllers.get(menuName).getMenu().show();
-        this.controllers.get(menuName).commandHandler();
+        Controller.CONTROLLERS.get(menuName).getMenu().show();
+        Controller.CONTROLLERS.get(menuName).commandHandler();
     }
 
     public HashMap<String, Matcher> checkCommand(HashMap<String, String> patterns, String command) {
@@ -57,4 +46,9 @@ public class BaseController {
     public Menu getMenu() {
         return this.menu;
     }
+
+    public void setClient(User client) {
+        this.client = client;
+    }
+
 }
