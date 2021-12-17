@@ -5,6 +5,7 @@ import view.WelcomeMenu;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AuthController extends BaseController {
     private final HashMap<String, String> patterns;
@@ -99,7 +100,9 @@ public class AuthController extends BaseController {
     }
 
     private boolean validEmail(String email) {
-        return true;
+        Pattern gmailPattern = Pattern.compile("^[A-Za-z0-9+.]+@gmail.com$");
+        Pattern yahooPattern = Pattern.compile("^[A-Za-z0-9+.]+@yahoo.com$");
+        return yahooPattern.matcher(email).matches() || gmailPattern.matcher(email).matches();
     }
 
 }
