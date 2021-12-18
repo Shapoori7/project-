@@ -49,6 +49,7 @@ public class AuthController extends BaseController {
 
         else {
             User user = new User(username, password1, email);
+            user.newLog();
             Controller.DATA_BASE_CONTROLLER.saveUser(user);
             setClient(user);
             this.menu.showResponse("user created successfully!");
@@ -73,6 +74,8 @@ public class AuthController extends BaseController {
         }
         else {
             this.menu.showResponse("user logged in successfully!");
+            user.newLog();
+            Controller.DATA_BASE_CONTROLLER.saveUser(user);
             setClient(user);
             showMenu("MainMenu");
         }

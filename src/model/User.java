@@ -1,8 +1,10 @@
 package model;
 
+import java.util.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import java.util.ArrayList;
 
 public class User implements Serializable {
     private String fullName;
@@ -12,11 +14,13 @@ public class User implements Serializable {
     private UserType type;
     private int score;
     private Date birthday;
+    private ArrayList<String> logs;
 
     public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.logs = new ArrayList<>();
     }
 
     public String getPassword() {
@@ -45,6 +49,12 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void newLog() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a");
+        Date date = new Date();
+        this.logs.add(dateFormat.format(date));
     }
 
     @Override
