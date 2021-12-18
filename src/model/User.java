@@ -39,6 +39,10 @@ public class User implements Serializable {
         return type;
     }
 
+    public ArrayList<String> getLogs() {
+        return logs;
+    }
+
     public void setType(UserType type) {
         this.type = type;
     }

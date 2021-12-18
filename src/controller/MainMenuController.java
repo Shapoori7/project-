@@ -88,6 +88,15 @@ public class MainMenuController extends BaseController {
         this.menu.showResponse(client.toString());
     }
 
+    public void showLogs() {
+        String userLogs = "";
+        for (String log: client.getLogs()) {
+            userLogs.join(log);
+            userLogs.join("\n");
+        }
+        this.menu.showResponse(userLogs);
+    }
+
     @Override
     public void commandHandler() {
         String command = Controller.INPUT.nextLine();
@@ -104,6 +113,7 @@ public class MainMenuController extends BaseController {
                 case "changePassword" -> changePassword(matcher);
                 case "changeUsername" -> changeUsername(matcher);
                 case "myProfile" -> myProfile();
+                case "showLogs" -> showLogs();
 
             }
 
