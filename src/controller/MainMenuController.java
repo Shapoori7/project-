@@ -21,6 +21,7 @@ public class MainMenuController extends BaseController {
         this.patterns.put("myProfile", "Profile --show --myProfile");
         this.patterns.put("showLogs", "");
         this.patterns.put("showNotifications", "");
+        this.patterns.put("changeTitle", "");
 
         this.menu = new MainMenu();
     }
@@ -88,6 +89,16 @@ public class MainMenuController extends BaseController {
         this.menu.showResponse(client.toString());
     }
 
+    public void changeTitle(Matcher matcher) {
+        String id = matcher.group(1);
+        String newTitle = matcher.group(2);
+
+        Task task = Controller.DATA_BASE_CONTROLLER.findTaskById(id);
+        task.setTitle(newTitle);
+        Controller.DATA_BASE_CONTROLLER.updateTask(task);
+
+    }
+
     public void showLogs() {
         String userLogs = "";
         for (String log: client.getLogs()) {
@@ -114,6 +125,7 @@ public class MainMenuController extends BaseController {
                 case "changeUsername" -> changeUsername(matcher);
                 case "myProfile" -> myProfile();
                 case "showLogs" -> showLogs();
+                case "changeTitle" -> if (leaderRequired) {changeTitle(matcher)};
 
             }
 
@@ -129,6 +141,14 @@ public class MainMenuController extends BaseController {
     private boolean validUsername(String username) {
         Pattern usernamePattern = Pattern.compile("^[a-zA-Z0-9-]*$");
         return usernamePattern.matcher(username).matches();
+    }
+
+    private boolean leaderRequired() {
+        boolean hasAccess = client.getType().equals(UserType.LEADER);
+        if (!hasAccess) {
+            this.menu.showError("You Don't Have Access To Do This Action!")
+        }
+        return hasAccess;
     }
 
 }
