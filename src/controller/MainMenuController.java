@@ -22,6 +22,8 @@ public class MainMenuController extends BaseController {
         this.patterns.put("showLogs", "");
         this.patterns.put("showNotifications", "");
         this.patterns.put("changeTitle", "");
+        this.patterns.put("changeDescription", "");
+        this.patterns.put("changePriority", "");
 
         this.menu = new MainMenu();
     }
@@ -87,16 +89,7 @@ public class MainMenuController extends BaseController {
 
     public void myProfile() {
         this.menu.showResponse(client.toString());
-    }
-
-    public void changeTitle(Matcher matcher) {
-        String id = matcher.group(1);
-        String newTitle = matcher.group(2);
-
-        Task task = Controller.DATA_BASE_CONTROLLER.findTaskById(id);
-        task.setTitle(newTitle);
-        Controller.DATA_BASE_CONTROLLER.updateTask(task);
-
+        commandHandler();
     }
 
     public void showLogs() {
@@ -106,6 +99,42 @@ public class MainMenuController extends BaseController {
             userLogs.join("\n");
         }
         this.menu.showResponse(userLogs);
+        commandHandler();
+    }
+
+    public void changeTitle(Matcher matcher) {
+        String id = matcher.group(1);
+        String newTitle = matcher.group(2);
+
+        Task task = Controller.DATA_BASE_CONTROLLER.findTaskById(id);
+        task.setTitle(newTitle);
+        Controller.DATA_BASE_CONTROLLER.updateTask(task);
+        this.menu.showResponse("Title updated successfully!");
+        commandHandler();
+
+    }
+
+    public void changeDescription(Matcher matcher) {
+        String id = matcher.group(1);
+        String newDescription = matcher.group(2);
+
+        Task task = Controller.DATA_BASE_CONTROLLER.findTaskById(id);
+        task.setDescription(newDescription);
+        Controller.DATA_BASE_CONTROLLER.updateTask(task);
+        this.menu.showResponse("Description updated successfully!");
+        commandHandler();
+
+    }
+
+    public void changePriority(Matcher matcher) {
+        String id = matcher.group(1);
+        String newPriority = matcher.group(2);
+
+        Task task = Controller.DATA_BASE_CONTROLLER.findTaskById(id);
+        task.setPriority(newPriority);
+        Controller.DATA_BASE_CONTROLLER.updateTask(task);
+        this.menu.showResponse("Priority updated successfully!");
+        commandHandler();
     }
 
     @Override
@@ -126,6 +155,8 @@ public class MainMenuController extends BaseController {
                 case "myProfile" -> myProfile();
                 case "showLogs" -> showLogs();
                 case "changeTitle" -> if (leaderRequired) {changeTitle(matcher)};
+                case "changeDescription" -> if (leaderRequired) {changeDescription(matcher)};
+                case "changePriority" -> if (leaderRequired) {changePriority(matcher)};
 
             }
 
