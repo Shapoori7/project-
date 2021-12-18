@@ -60,7 +60,58 @@ public class DataBaseController {
 
         }
 
+        // todo: all tasks assigned to the updated user should be updated!
+
     }
+
+    private ArrayList<Task> loadTasksList() {
+        File f = new File("src/db/Tasks.txt");
+
+        try(FileInputStream fis = new FileInputStream(f);
+            ObjectInputStream ois = new ObjectInputStream(fis)) {
+            return (ArrayList<Task>) ois.readObject();
+        }
+        catch (IOException e) {
+            System.err.println("couldn't open the file");
+        }
+        catch (ClassNotFoundException e) {
+            System.err.println("couldn't get the list");
+        }
+        return null;
+    }
+
+    public Task findTaskById(String id) {
+        for (Task task: Objects.requireNonNull(loadTasksList())) {
+            if (task.getId().equals(id)) {
+                return task;
+            }
+        }
+        return null;
+    }
+
+    public void updateTask(Task task) {
+        ArrayList<Task> tasks = loadTasksList();
+        assert tasks != null;
+        tasks.removeIf(taskInDb -> taskInDb.equals(task));
+        tasks.add(task);
+
+        File f = new File("src/db/Tasks.txt");
+
+        try(FileOutputStream fos = new FileOutputStream(f);
+            ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(tasks);
+
+        }
+        catch (IOException e) {
+            System.err.println("couldn't open the file");
+
+        }
+
+        // todo: update users assigned to this task
+
+    }
+
+    
 
     public void dbInitializer() {
         ArrayList<User> users = new ArrayList<>();
