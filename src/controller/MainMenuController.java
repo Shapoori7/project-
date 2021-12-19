@@ -1,5 +1,7 @@
 package controller;
 
+import model.Task;
+import model.UserType;
 import view.MainMenu;
 
 import java.util.HashMap;
@@ -93,12 +95,12 @@ public class MainMenuController extends BaseController {
     }
 
     public void showLogs() {
-        String userLogs = "";
+        StringBuilder userLogs = new StringBuilder();
         for (String log: client.getLogs()) {
-            userLogs.join(log);
-            userLogs.join("\n");
+            userLogs.append(log);
+            userLogs.append("\n");
         }
-        this.menu.showResponse(userLogs);
+        this.menu.showResponse(userLogs.toString());
         commandHandler();
     }
 
@@ -154,9 +156,15 @@ public class MainMenuController extends BaseController {
                 case "changeUsername" -> changeUsername(matcher);
                 case "myProfile" -> myProfile();
                 case "showLogs" -> showLogs();
-                case "changeTitle" -> if (leaderRequired) {changeTitle(matcher)};
-                case "changeDescription" -> if (leaderRequired) {changeDescription(matcher)};
-                case "changePriority" -> if (leaderRequired) {changePriority(matcher)};
+                case "changeTitle" -> {
+                    if (leaderRequired()) {changeTitle(matcher);}
+                }
+                case "changeDescription" -> {
+                    if (leaderRequired()) {changeDescription(matcher);}
+                }
+                case "changePriority" -> {
+                    if (leaderRequired()) {changePriority(matcher);}
+                }
 
             }
 
@@ -177,7 +185,7 @@ public class MainMenuController extends BaseController {
     private boolean leaderRequired() {
         boolean hasAccess = client.getType().equals(UserType.LEADER);
         if (!hasAccess) {
-            this.menu.showError("You Don't Have Access To Do This Action!")
+            this.menu.showError("You Don't Have Access To Do This Action!");
         }
         return hasAccess;
     }

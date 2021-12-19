@@ -1,18 +1,18 @@
 package model;
 
-import java.util.*;
+import java.text.SimpleDateFormat;
 import java.util.UUID;
 import java.util.Date;
 import java.util.ArrayList;
-import User;
-import TaskPriority;
+import model.User;
+import model.TaskPriority;
 
 public class Task {
     private UUID id;
     private String title;
     private String description;
     private TaskPriority priority;
-    private Date created;
+    private final Date created;
     private Date deadline;
     private ArrayList<User> assignedUsers;
     private ArrayList<String> comments;
@@ -21,6 +21,27 @@ public class Task {
         this.id = UUID.randomUUID();
         this.assignedUsers = new ArrayList<>();
         this.created = new Date();
+    }
+
+    public String getId() {
+        return id.toString();
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPriority(String newPriority) {
+        switch (newPriority) {
+            case "LOWEST" -> this.priority = TaskPriority.LOWEST;
+            case "LOW" -> this.priority = TaskPriority.LOW;
+            case "HIGH" -> this.priority = TaskPriority.HIGH;
+            case "HIGHEST" -> this.priority = TaskPriority.HIGHEST;
+        }
     }
 
     @Override
@@ -37,11 +58,11 @@ public class Task {
     }
 
     private String usersToString() {
-        String usres = "";
+        StringBuilder users = new StringBuilder();
         for (User user: assignedUsers) {
-            users.join(user.getUsername());
+            users.append(user.getUsername());
         }
-        return users;
+        return users.toString();
     }
 
 }

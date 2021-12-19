@@ -1,6 +1,7 @@
 package controller;
 
 import model.User;
+import model.Task;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.Objects;
 
 public class DataBaseController {
 
+    // handle user model in database
     private ArrayList<User> loadUsersList() {
         File f = new File("src/db/Users.txt");
 
@@ -64,6 +66,7 @@ public class DataBaseController {
 
     }
 
+    // handle task model in database
     private ArrayList<Task> loadTasksList() {
         File f = new File("src/db/Tasks.txt");
 
