@@ -1,7 +1,7 @@
 package view;
 
 public class MainMenu extends Menu{
-    private String otherMenus;
+    private final String otherMenus;
     public MainMenu() {
         super();
         this.otherMenus = """
@@ -15,11 +15,11 @@ public class MainMenu extends Menu{
 
     @Override
     public void show() {
-        System.out.println("welcome to main menu");
-        System.out.println("based on your user type u have access to different parts");
+        showResponse("welcome to main menu");
+        showResponse("based on your user type u have access to different parts");
         System.out.println();
-        System.out.println(otherMenus);
-        System.out.println("to enter a menu, type this command: enter menu <Menu Name>");
+        showResponse(otherMenus);
+        showResponse("to enter a menu, type this command: enter menu <Menu Name>");
 
     }
 

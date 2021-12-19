@@ -11,8 +11,8 @@ public class WelcomeMenu extends Menu {
 
     @Override
     public void show() {
-        System.out.println(this.message);
-        System.out.println(this.version);
+        showResponse(this.message);
+        showResponse(this.version);
     }
 
     public void setVersion(String version) {

@@ -14,6 +14,7 @@ public interface Controller {
     static void init() {
         CONTROLLERS.put("WelcomeMenu", new AuthController());
         CONTROLLERS.put("MainMenu", new MainMenuController());
+        CONTROLLERS.put("TeamMenu", new TeamMenuController());
     }
 
 }

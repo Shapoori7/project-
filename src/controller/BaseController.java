@@ -13,9 +13,17 @@ public class BaseController {
 
     public BaseController() {}
 
-    public void showMenu(String menuName) {
-        Controller.CONTROLLERS.get(menuName).getMenu().show();
-        Controller.CONTROLLERS.get(menuName).commandHandler();
+    public void showMenu(String... menuName) {
+        Controller.CONTROLLERS.get(menuName[0]).getMenu().show();
+        if (menuName[0].equals("TeamMenu")) {
+            TeamMenuController teamCtrl = (TeamMenuController) Controller.CONTROLLERS.get(menuName[0]);
+            teamCtrl.setTeam(client.getTeamByName(menuName[1]));
+            teamCtrl.commandHandler();
+        }
+        else {
+            Controller.CONTROLLERS.get(menuName[0]).commandHandler();
+        }
+
     }
 
     public HashMap<String, Matcher> checkCommand(HashMap<String, String> patterns, String command) {

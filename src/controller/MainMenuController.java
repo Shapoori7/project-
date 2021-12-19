@@ -27,8 +27,14 @@ public class MainMenuController extends BaseController {
         this.patterns.put("changeDeadline", "");
         this.patterns.put("removeUser", "");
         this.patterns.put("addUser", "");
+        this.patterns.put("enterTeam", "");
 
         this.menu = new MainMenu();
+    }
+
+    private void enterTeam(Matcher matcher) {
+        Controller.PROFILE.showTeam(matcher);
+        showMenu("TeamMenu", matcher.group(1));
     }
 
 
@@ -90,11 +96,7 @@ public class MainMenuController extends BaseController {
                     if (leaderRequired()) {Controller.TASK.addUser(matcher);}
                     commandHandler();
                 }
-                default -> {
-                    this.menu.showError("invalid command");
-                    commandHandler();
-                }
-
+                case "enterTeam" -> enterTeam(matcher);
             }
 
         }
