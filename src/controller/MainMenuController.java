@@ -50,6 +50,14 @@ public class MainMenuController extends BaseController {
                     Controller.PROFILE.changeUsername(matcher);
                     commandHandler();
                 }
+                case "showTeams" -> {
+                    Controller.PROFILE.showTeams();
+                    commandHandler();
+                }
+                case "showTeam" -> {
+                    Controller.PROFILE.showTeam(matcher);
+                    commandHandler();
+                }
                 case "myProfile" -> {
                     Controller.PROFILE.myProfile();
                     commandHandler();

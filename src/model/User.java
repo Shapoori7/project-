@@ -16,6 +16,7 @@ public class User implements Serializable {
     private Date birthday;
     private final ArrayList<String> logs;
     private ArrayList<Task> assignedTasks;
+    private ArrayList<Team> teams;
 
     public User(String username, String password, String email) {
         this.username = username;
@@ -23,6 +24,7 @@ public class User implements Serializable {
         this.email = email;
         this.logs = new ArrayList<>();
         this.assignedTasks = new ArrayList<>();
+        this.teams = new ArrayList<>();
     }
 
     public String getPassword() {
@@ -55,6 +57,23 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public ArrayList<Team> getTeams() {
+        return teams;
+    }
+
+    public Team getTeamByName(String teamName) {
+        for (Team team: this.teams) {
+            if (team.getName().equals(teamName)) {
+                return team;
+            }
+        }
+        return null;
     }
 
     public void newLog() {

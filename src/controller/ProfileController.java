@@ -1,5 +1,9 @@
 package controller;
 
+import model.Team;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -60,6 +64,28 @@ public class ProfileController extends MainMenuController{
             Controller.DATA_BASE_CONTROLLER.saveUser(client);
             this.menu.showResponse("username changed successfully");
         }
+
+    }
+
+    public void showTeams() {
+        ArrayList<Team> teams = client.getTeams();
+        teams.sort(Comparator.comparing(Team::getCreated));
+
+        StringBuilder userTeams = new StringBuilder();
+
+        for (Team team: teams) {
+            userTeams.append(team.getName()).append("\n");
+        }
+
+        this.menu.showResponse(userTeams.toString());
+
+    }
+
+    public void showTeam(Matcher matcher) {
+        String teamName = matcher.group(1);
+        Team team = client.getTeamByName(teamName);
+
+        this.menu.showResponse(team.toString(client));
 
     }
 
