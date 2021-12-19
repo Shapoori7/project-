@@ -12,7 +12,7 @@ public class Task {
     private TaskPriority priority;
     private final LocalDate created;
     private LocalDate deadline;
-    private ArrayList<User> assignedUsers;
+    private final ArrayList<User> assignedUsers;
     private ArrayList<String> comments;
 
     public Task() {
@@ -48,6 +48,18 @@ public class Task {
             case "HIGH" -> this.priority = TaskPriority.HIGH;
             case "HIGHEST" -> this.priority = TaskPriority.HIGHEST;
         }
+    }
+
+    public ArrayList<User> getAssignedUsers() {
+        return assignedUsers;
+    }
+
+    public void removeUser(User user) {
+        this.assignedUsers.remove(user);
+    }
+
+    public void addUser(User user) {
+        this.assignedUsers.add(user);
     }
 
     @Override

@@ -15,12 +15,14 @@ public class User implements Serializable {
     private int score;
     private Date birthday;
     private final ArrayList<String> logs;
+    private ArrayList<Task> assignedTasks;
 
     public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.logs = new ArrayList<>();
+        this.assignedTasks = new ArrayList<>();
     }
 
     public String getPassword() {
@@ -59,6 +61,14 @@ public class User implements Serializable {
         SimpleDateFormat dateFormat = new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a");
         Date date = new Date();
         this.logs.add(dateFormat.format(date));
+    }
+
+    public void addTask(Task task) {
+        this.assignedTasks.add(task);
+    }
+
+    public void removeTask(Task task) {
+        this.assignedTasks.remove(task);
     }
 
     @Override

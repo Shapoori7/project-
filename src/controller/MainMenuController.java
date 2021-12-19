@@ -1,12 +1,13 @@
 package controller;
 
 import model.Task;
+import model.User;
 import model.UserType;
 import view.MainMenu;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +31,8 @@ public class MainMenuController extends BaseController {
         this.patterns.put("changeDescription", "");
         this.patterns.put("changePriority", "");
         this.patterns.put("changeDeadline", "");
+        this.patterns.put("removeUser", "");
+        this.patterns.put("addUser", "");
 
         this.menu = new MainMenu();
     }
@@ -163,6 +166,47 @@ public class MainMenuController extends BaseController {
         commandHandler();
     }
 
+    public void removeUser(Matcher matcher) {
+        String id = matcher.group(1);
+        String username = matcher.group(2);
+
+        Task task = Controller.DATA_BASE_CONTROLLER.findTaskById(id);
+        User user = Controller.DATA_BASE_CONTROLLER.findUserByUsername(username);
+
+        if (!task.getAssignedUsers().contains(user)) {
+            this.menu.showError("There is not any user with this username " + username + " in list!");
+        }
+        else {
+            task.removeUser(user);
+            user.removeTask(task);
+            Controller.DATA_BASE_CONTROLLER.updateTask(task);
+            Controller.DATA_BASE_CONTROLLER.saveUser(user);
+            this.menu.showResponse("User " + username + " removed successfully!");
+        }
+        commandHandler();
+    }
+
+    public void addUser(Matcher matcher) {
+        String id = matcher.group(1);
+        String username = matcher.group(2);
+
+        Task task = Controller.DATA_BASE_CONTROLLER.findTaskById(id);
+        User user = Controller.DATA_BASE_CONTROLLER.findUserByUsername(username);
+
+        if (user == null) {
+            this.menu.showError("There is not any user with this username " + username + "!");
+        }
+        else {
+            task.addUser(user);
+            user.addTask(task);
+            Controller.DATA_BASE_CONTROLLER.updateTask(task);
+            Controller.DATA_BASE_CONTROLLER.saveUser(user);
+            this.menu.showResponse("User " + username + " added successfully!");
+        }
+
+        commandHandler();
+    }
+
     @Override
     public void commandHandler() {
         String command = Controller.INPUT.nextLine();
@@ -191,6 +235,16 @@ public class MainMenuController extends BaseController {
                 }
                 case "changeDeadline" -> {
                     if (leaderRequired()) {changeDeadline(matcher);}
+                }
+                case "removeUser" -> {
+                    if (leaderRequired()) {removeUser(matcher);}
+                }
+                case "addUser" -> {
+                    if (leaderRequired()) {addUser(matcher);}
+                }
+                default -> {
+                    this.menu.showError("invalid command");
+                    commandHandler();
                 }
 
             }
