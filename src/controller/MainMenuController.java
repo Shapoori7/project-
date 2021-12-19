@@ -4,6 +4,9 @@ import model.Task;
 import model.UserType;
 import view.MainMenu;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,6 +29,7 @@ public class MainMenuController extends BaseController {
         this.patterns.put("changeTitle", "");
         this.patterns.put("changeDescription", "");
         this.patterns.put("changePriority", "");
+        this.patterns.put("changeDeadline", "");
 
         this.menu = new MainMenu();
     }
@@ -139,6 +143,26 @@ public class MainMenuController extends BaseController {
         commandHandler();
     }
 
+    public void changeDeadline(Matcher matcher) {
+        String id = matcher.group(1);
+        String deadline = matcher.group(2);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'|'hh:mm");
+        LocalDate newDeadline = LocalDate.parse(deadline, formatter);
+
+        Task task = Controller.DATA_BASE_CONTROLLER.findTaskById(id);
+
+        if (task.getCreated().isAfter(newDeadline)) {
+            this.menu.showError("New deadline is invalid!");
+        }
+        else {
+            task.setDeadline(newDeadline);
+            Controller.DATA_BASE_CONTROLLER.updateTask(task);
+            this.menu.showResponse("Deadline updated successfully!");
+        }
+
+        commandHandler();
+    }
+
     @Override
     public void commandHandler() {
         String command = Controller.INPUT.nextLine();
@@ -164,6 +188,9 @@ public class MainMenuController extends BaseController {
                 }
                 case "changePriority" -> {
                     if (leaderRequired()) {changePriority(matcher);}
+                }
+                case "changeDeadline" -> {
+                    if (leaderRequired()) {changeDeadline(matcher);}
                 }
 
             }

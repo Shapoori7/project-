@@ -1,26 +1,24 @@
 package model;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.UUID;
-import java.util.Date;
 import java.util.ArrayList;
-import model.User;
-import model.TaskPriority;
 
 public class Task {
-    private UUID id;
+    private final UUID id;
     private String title;
     private String description;
     private TaskPriority priority;
-    private final Date created;
-    private Date deadline;
+    private final LocalDate created;
+    private LocalDate deadline;
     private ArrayList<User> assignedUsers;
     private ArrayList<String> comments;
 
     public Task() {
         this.id = UUID.randomUUID();
         this.assignedUsers = new ArrayList<>();
-        this.created = new Date();
+        this.created = LocalDate.now();
     }
 
     public String getId() {
@@ -33,6 +31,14 @@ public class Task {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LocalDate getCreated() {
+        return created;
+    }
+
+    public void setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
     }
 
     public void setPriority(String newPriority) {

@@ -1,6 +1,6 @@
 package model;
 
-import java.util.*;
+import java.text.SimpleDateFormat;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -14,7 +14,7 @@ public class User implements Serializable {
     private UserType type;
     private int score;
     private Date birthday;
-    private ArrayList<String> logs;
+    private final ArrayList<String> logs;
 
     public User(String username, String password, String email) {
         this.username = username;
