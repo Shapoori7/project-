@@ -1,5 +1,6 @@
 package controller;
 
+import model.Message;
 import model.Team;
 import view.TeamMenu;
 
@@ -41,6 +42,15 @@ public class TeamMenuController extends BaseController{
         this.menu.showResponse(this.team.generateChatroom());
     }
 
+    public void sendMessage(Matcher matcher) {
+        String text = matcher.group(1);
+        Message message = new Message(client.getFullName(), text);
+
+        this.team.addMessage(message);
+        showChatroom();
+        Controller.DATA_BASE_CONTROLLER.updateTeam(this.team);
+    }
+
     @Override
     public void commandHandler() {
         String command = Controller.INPUT.nextLine();
@@ -63,6 +73,10 @@ public class TeamMenuController extends BaseController{
                 }
                 case "chatroom" -> {
                     showChatroom();
+                    commandHandler();
+                }
+                case "sendMessage" -> {
+                    sendMessage(matcher);
                     commandHandler();
                 }
 

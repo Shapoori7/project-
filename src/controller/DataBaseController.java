@@ -141,6 +141,28 @@ public class DataBaseController {
         return null;
     }
 
+    public void updateTeam(Team team) {
+        ArrayList<Team> teams = loadTeamsList();
+        assert teams != null;
+        teams.removeIf(teamInDb -> teamInDb.equals(team));
+        teams.add(team);
+
+        File f = new File("src/db/Teams.txt");
+
+        try(FileOutputStream fos = new FileOutputStream(f);
+            ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(teams);
+
+        }
+        catch (IOException e) {
+            System.err.println("couldn't open the file");
+
+        }
+
+        // todo: update users assigned to this team
+
+    }
+
 
     public void dbInitializer() {
         ArrayList<User> users = new ArrayList<>();

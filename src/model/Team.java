@@ -65,6 +65,9 @@ public class Team implements Serializable {
     }
 
     public String generateChatroom() {
+        if (this.messages.size() == 0) {
+            return "no message yet";
+        }
         this.messages.sort(Comparator.comparing(Message::getDate));
 
         StringBuilder chatroom = new StringBuilder();
@@ -73,6 +76,10 @@ public class Team implements Serializable {
         }
 
         return chatroom.toString();
+    }
+
+    public void addMessage(Message message) {
+        this.messages.add(message);
     }
 
     public String toString(User user) {
