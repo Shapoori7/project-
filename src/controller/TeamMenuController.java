@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 
 public class TeamMenuController extends BaseController{
     private final HashMap<String, String> patterns;
-    private Team team;
+    protected Team team;
 
     public TeamMenuController() {
         super();

@@ -12,6 +12,8 @@ public class Team implements Serializable {
     LocalDate created;
     ArrayList<Task> tasks;
     ArrayList<Message> messages;
+    ArrayList<Board> boards;
+    Board stageOneBoard;
 
     public Team(User leader) {
         this.leader = leader;
@@ -19,6 +21,7 @@ public class Team implements Serializable {
         this.created = LocalDate.now();
         this.tasks = new ArrayList<>();
         this.messages = new ArrayList<>();
+        this.boards = new ArrayList<>();
     }
 
     public String getName() {
@@ -27,6 +30,31 @@ public class Team implements Serializable {
 
     public LocalDate getCreated() {
         return created;
+    }
+
+    public Board getStageOneBoard() {
+        return stageOneBoard;
+    }
+
+    public boolean boardExists(String boardName) {
+        for (Board board: this.boards) {
+            if (board.getName().equals(boardName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void addBoard(Board board) {
+        this.stageOneBoard = board;
+    }
+
+    public void removeBoard(String boardName) {
+        this.boards.removeIf(board -> board.getName().equals(boardName));
+        if (stageOneBoard.getName().equals(boardName)) {
+            this.stageOneBoard = null;
+        }
     }
 
     public String generateScoreboard() {
