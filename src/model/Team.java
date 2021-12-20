@@ -82,6 +82,44 @@ public class Team implements Serializable {
         this.messages.add(message);
     }
 
+    public String getTasksToString() {
+        if (this.tasks.size() == 0) {
+            return "no task yet";
+        }
+        Comparator priorityComparator = new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                TaskPriority priority1 = ((Task)o1).getPriority();
+                TaskPriority priority2 = ((Task)o2).getPriority();
+
+                if (priority1.equals(priority2)) {
+                    return 1;
+                }
+                else if (priority1.equals(TaskPriority.HIGHEST)) {
+                    return 1;
+                }
+                else if (priority1.equals(TaskPriority.HIGH) && !priority2.equals(TaskPriority.HIGHEST)) {
+                    return 1;
+                }
+                else if (priority1.equals(TaskPriority.LOW) && priority2.equals(TaskPriority.LOWEST)) {
+                    return 1;
+                }
+
+                return 0;
+            }
+        };
+
+        this.tasks.sort(Comparator.comparing(Task::getCreated));
+        this.tasks.sort(priorityComparator);
+
+        StringBuilder tasksString = new StringBuilder();
+        for (Task task: this.tasks) {
+            tasksString.append(task.toString()).append("\n");
+        }
+
+        return tasksString.toString();
+    }
+
     public String toString(User user) {
         StringBuilder teamInfo = new StringBuilder();
         teamInfo.append(this.name).append("\n");

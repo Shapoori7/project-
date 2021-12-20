@@ -1,6 +1,7 @@
 package controller;
 
 import model.Message;
+import model.Task;
 import model.Team;
 import view.TeamMenu;
 
@@ -21,6 +22,7 @@ public class TeamMenuController extends BaseController{
         this.patterns.put("sendMessage", "");
         this.patterns.put("showTasks", "show tasks");
         this.patterns.put("showTask", "");
+        this.patterns.putAll(Controller.TASK.getPatterns());
 
         this.menu = new TeamMenu();
 
@@ -51,6 +53,17 @@ public class TeamMenuController extends BaseController{
         Controller.DATA_BASE_CONTROLLER.updateTeam(this.team);
     }
 
+    public void showTasks() {
+        this.menu.showResponse(this.team.getTasksToString());
+    }
+
+    public void showTask(Matcher matcher) {
+        String id = matcher.group(1);
+        Task task = Controller.DATA_BASE_CONTROLLER.findTaskById(id);
+        this.menu.showResponse(task.toString());
+
+    }
+
     @Override
     public void commandHandler() {
         String command = Controller.INPUT.nextLine();
@@ -79,8 +92,20 @@ public class TeamMenuController extends BaseController{
                     sendMessage(matcher);
                     commandHandler();
                 }
-
-
+                case "showTasks" -> {
+                    showTasks();
+                    commandHandler();
+                }
+                case "showTask" -> {
+                    showTask(matcher);
+                    commandHandler();
+                }
+                default -> {
+                    if (Controller.TASK.getPatternsNames().contains(key)) {
+                        Controller.TASK.commandHandler(key, matcher);
+                        this.commandHandler();
+                    }
+                }
 
             }
 
