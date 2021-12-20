@@ -3,6 +3,7 @@ package model;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.UUID;
 import java.util.ArrayList;
 
@@ -65,6 +66,10 @@ public class Task implements Serializable {
         return completed;
     }
 
+    public TaskPriority getPriority() {
+        return priority;
+    }
+
     public void removeUser(User user) {
         this.assignedUsers.remove(user);
     }
@@ -77,20 +82,24 @@ public class Task implements Serializable {
     public String toString() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'|'hh:mm");
         return "Task{" +
-                "Title='" + title + '\'' +
-                ", Description='" + description + '\'' +
+                "title : " + title +
+                ",id : " + id +
+                ", description='" + description +
                 ", Priority=" + priority +
-                ", Date and time of creation='" + dateFormat.format(created) + '\'' +
-                ", Date and time of deadline=" + dateFormat.format(deadline) +
-                ", Assigned users=\n" + usersToString() +
+                ", creation date : " + dateFormat.format(created) + '\'' +
+                ", deadline : " + dateFormat.format(deadline) +
+                ", assign to : " + usersToString() +
                 '}';
     }
 
     private String usersToString() {
+        assignedUsers.sort(Comparator.comparing(User::getUsername));
         StringBuilder users = new StringBuilder();
+        users.append("[");
         for (User user: assignedUsers) {
-            users.append(user.getUsername());
+            users.append(user.getUsername()).append(", ");
         }
+        users.append("]");
         return users.toString();
     }
 
