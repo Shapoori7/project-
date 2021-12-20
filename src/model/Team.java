@@ -10,12 +10,14 @@ public class Team {
     ArrayList<User> members;
     LocalDate created;
     ArrayList<Task> tasks;
+    ArrayList<Message> messages;
 
     public Team(User leader) {
         this.leader = leader;
         this.members = new ArrayList<>();
         this.created = LocalDate.now();
         this.tasks = new ArrayList<>();
+        this.messages = new ArrayList<>();
     }
 
     public String getName() {
@@ -45,6 +47,9 @@ public class Team {
     }
 
     public String generateRoadmap() {
+        if (this.tasks.size() == 0) {
+            return "no task yet";
+        }
         this.tasks.sort(Comparator.comparing(Task::getTitle));
         this.tasks.sort(Comparator.comparing(Task::getCompleted));
 
@@ -56,6 +61,17 @@ public class Team {
         }
 
         return roadmap.toString();
+    }
+
+    public String generateChatroom() {
+        this.messages.sort(Comparator.comparing(Message::getDate));
+
+        StringBuilder chatroom = new StringBuilder();
+        for (Message message: this.messages) {
+            chatroom.append(message.toString()).append("\n");
+        }
+
+        return chatroom.toString();
     }
 
     public String toString(User user) {

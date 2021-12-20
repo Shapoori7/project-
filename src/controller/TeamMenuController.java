@@ -37,6 +37,10 @@ public class TeamMenuController extends BaseController{
         this.menu.showResponse(this.team.generateRoadmap());
     }
 
+    public void showChatroom() {
+        this.menu.showResponse(this.team.generateChatroom());
+    }
+
     @Override
     public void commandHandler() {
         String command = Controller.INPUT.nextLine();
@@ -55,6 +59,10 @@ public class TeamMenuController extends BaseController{
                 }
                 case "roadmap" -> {
                     showRoadmap();
+                    commandHandler();
+                }
+                case "chatroom" -> {
+                    showChatroom();
                     commandHandler();
                 }
 
