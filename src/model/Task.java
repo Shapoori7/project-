@@ -1,11 +1,12 @@
 package model;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.UUID;
 import java.util.ArrayList;
 
-public class Task {
+public class Task implements Serializable {
     private final UUID id;
     private String title;
     private String description;

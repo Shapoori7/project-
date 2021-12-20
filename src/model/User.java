@@ -71,15 +71,6 @@ public class User implements Serializable {
         return score;
     }
 
-    public Team getTeamByName(String teamName) {
-        for (Team team: this.teams) {
-            if (team.getName().equals(teamName)) {
-                return team;
-            }
-        }
-        return null;
-    }
-
     public void newLog() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a");
         Date date = new Date();

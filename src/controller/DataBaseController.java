@@ -1,5 +1,6 @@
 package controller;
 
+import model.Team;
 import model.User;
 import model.Task;
 
@@ -114,7 +115,32 @@ public class DataBaseController {
 
     }
 
-    
+    // handle team model in database
+    private ArrayList<Team> loadTeamsList() {
+        File f = new File("src/db/Teams.txt");
+
+        try(FileInputStream fis = new FileInputStream(f);
+            ObjectInputStream ois = new ObjectInputStream(fis)) {
+            return (ArrayList<Team>) ois.readObject();
+        }
+        catch (IOException e) {
+            System.err.println("couldn't open the file");
+        }
+        catch (ClassNotFoundException e) {
+            System.err.println("couldn't get the list");
+        }
+        return null;
+    }
+
+    public Team findTeamByName(String name) {
+        for (Team team: Objects.requireNonNull(loadTeamsList())) {
+            if (team.getName().equals(name)) {
+                return team;
+            }
+        }
+        return null;
+    }
+
 
     public void dbInitializer() {
         ArrayList<User> users = new ArrayList<>();

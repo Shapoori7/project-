@@ -83,7 +83,7 @@ public class ProfileController extends MainMenuController{
 
     public void showTeam(Matcher matcher) {
         String teamName = matcher.group(1);
-        Team team = client.getTeamByName(teamName);
+        Team team = Controller.DATA_BASE_CONTROLLER.findTeamByName(teamName);
 
         this.menu.showResponse(team.toString(client));
 

@@ -1,10 +1,11 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class Team {
+public class Team implements Serializable {
     String name;
     User leader;
     ArrayList<User> members;

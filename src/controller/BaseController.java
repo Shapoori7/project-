@@ -17,7 +17,7 @@ public class BaseController {
         Controller.CONTROLLERS.get(menuName[0]).getMenu().show();
         if (menuName[0].equals("TeamMenu")) {
             TeamMenuController teamCtrl = (TeamMenuController) Controller.CONTROLLERS.get(menuName[0]);
-            teamCtrl.setTeam(client.getTeamByName(menuName[1]));
+            teamCtrl.setTeam(Controller.DATA_BASE_CONTROLLER.findTeamByName(menuName[1]));
             teamCtrl.commandHandler();
         }
         else {
