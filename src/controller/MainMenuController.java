@@ -1,6 +1,5 @@
 package controller;
 
-import model.UserType;
 import view.MainMenu;
 
 import java.util.HashMap;
@@ -14,19 +13,8 @@ public class MainMenuController extends BaseController {
 
         this.patterns = new HashMap<>();
         this.patterns.put("enterMenu", "enter\\s+menu (\\S+)");
-        this.patterns.put("changePassword", "");
-        this.patterns.put("changeUsername", "");
-        this.patterns.put("showTeams", "");
-        this.patterns.put("showTeam", "");
-        this.patterns.put("myProfile", "Profile --show --myProfile");
-        this.patterns.put("showLogs", "");
-        this.patterns.put("showNotifications", "");
-        this.patterns.put("changeTitle", "");
-        this.patterns.put("changeDescription", "");
-        this.patterns.put("changePriority", "");
-        this.patterns.put("changeDeadline", "");
-        this.patterns.put("removeUser", "");
-        this.patterns.put("addUser", "");
+        this.patterns.putAll(Controller.PROFILE.getPatterns());
+        this.patterns.putAll(Controller.TASK.getPatterns());
         this.patterns.put("enterTeam", "");
 
         this.menu = new MainMenu();
@@ -51,65 +39,21 @@ public class MainMenuController extends BaseController {
             Matcher matcher = result.get(key);
             switch (key) {
                 case "enterMenu" -> showMenu(matcher.group());
-                case "changePassword" -> Controller.PROFILE.changePassword(matcher);
-                case "changeUsername" -> {
-                    Controller.PROFILE.changeUsername(matcher);
-                    commandHandler();
-                }
-                case "showTeams" -> {
-                    Controller.PROFILE.showTeams();
-                    commandHandler();
-                }
-                case "showTeam" -> {
-                    Controller.PROFILE.showTeam(matcher);
-                    commandHandler();
-                }
-                case "myProfile" -> {
-                    Controller.PROFILE.myProfile();
-                    commandHandler();
-                }
-                case "showLogs" -> {
-                    Controller.PROFILE.showLogs();
-                    commandHandler();
-                }
-                case "changeTitle" -> {
-                    if (leaderRequired()) {Controller.TASK.changeTitle(matcher);}
-                    commandHandler();
-                }
-                case "changeDescription" -> {
-                    if (leaderRequired()) {Controller.TASK.changeDescription(matcher);}
-                    commandHandler();
-                }
-                case "changePriority" -> {
-                    if (leaderRequired()) {Controller.TASK.changePriority(matcher);}
-                    commandHandler();
-                }
-                case "changeDeadline" -> {
-                    if (leaderRequired()) {Controller.TASK.changeDeadline(matcher);}
-                    commandHandler();
-                }
-                case "removeUser" -> {
-                    if (leaderRequired()) {Controller.TASK.removeUser(matcher);}
-                    commandHandler();
-                }
-                case "addUser" -> {
-                    if (leaderRequired()) {Controller.TASK.addUser(matcher);}
-                    commandHandler();
-                }
                 case "enterTeam" -> enterTeam(matcher);
+                default -> {
+                    if (Controller.PROFILE.getPatternsNames().contains(key)) {
+                        Controller.PROFILE.commandHandler(key, matcher);
+                    }
+                    else if (Controller.TASK.getPatternsNames().contains(key)) {
+                        Controller.TASK.commandHandler(key, matcher);
+                        this.commandHandler();
+                    }
+                }
             }
 
         }
 
     }
 
-
-    private boolean leaderRequired() {
-        boolean hasAccess = client.getType().equals(UserType.LEADER);
-        if (!hasAccess) {
-            this.menu.showError("You Don't Have Access To Do This Action!");
-        }
-        return hasAccess;
-    }
 
 }

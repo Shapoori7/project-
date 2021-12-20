@@ -4,10 +4,27 @@ import model.Team;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ProfileController extends MainMenuController{
+    private final HashMap<String, String> patterns;
+
+    public ProfileController() {
+        super();
+
+        this.patterns = new HashMap<>();
+        this.patterns.put("changePassword", "");
+        this.patterns.put("changeUsername", "");
+        this.patterns.put("showTeams", "");
+        this.patterns.put("showTeam", "");
+        this.patterns.put("myProfile", "Profile --show --myProfile");
+        this.patterns.put("showLogs", "");
+        this.patterns.put("showNotifications", "");
+
+    }
 
     public void changePassword(Matcher matcher) {
         String oldPass = matcher.group(1);
@@ -25,14 +42,14 @@ public class ProfileController extends MainMenuController{
 
         else if (oldPass.equals(newPass)) {
             this.menu.showError("Please type a New Password !");
-            commandHandler();
+            super.commandHandler();
         }
 
         else if (!validPassword(newPass)) {
             this.menu.showError(
                     "Please Choose A strong Password " +
                             "(Containing at least 8 characters including 1 digit and 1 Capital Letter)");
-            commandHandler();
+            super.commandHandler();
         }
         else {
             client.setPassword(newPass);
@@ -110,6 +127,41 @@ public class ProfileController extends MainMenuController{
     private boolean validUsername(String username) {
         Pattern usernamePattern = Pattern.compile("^[a-zA-Z0-9-]*$");
         return usernamePattern.matcher(username).matches();
+    }
+
+    public void commandHandler(String key, Matcher matcher) {
+        switch (key) {
+            case "changePassword" -> changePassword(matcher);
+            case "changeUsername" -> {
+                changeUsername(matcher);
+                super.commandHandler();
+            }
+            case "showTeams" -> {
+                showTeams();
+                super.commandHandler();
+            }
+            case "showTeam" -> {
+                showTeam(matcher);
+                super.commandHandler();
+            }
+            case "myProfile" -> {
+                myProfile();
+                super.commandHandler();
+            }
+            case "showLogs" -> {
+                showLogs();
+                super.commandHandler();
+            }
+        }
+
+    }
+
+    public Set<String> getPatternsNames() {
+        return this.patterns.keySet();
+    }
+
+    public HashMap<String, String> getPatterns() {
+        return patterns;
     }
 
 }
