@@ -67,6 +67,10 @@ public class User implements Serializable {
         return teams;
     }
 
+    public int getScore() {
+        return score;
+    }
+
     public Team getTeamByName(String teamName) {
         for (Team team: this.teams) {
             if (team.getName().equals(teamName)) {

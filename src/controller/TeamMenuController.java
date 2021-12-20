@@ -29,6 +29,10 @@ public class TeamMenuController extends BaseController{
         this.team = team;
     }
 
+    public void showScoreboard() {
+        this.menu.showResponse(this.team.generateScoreboard());
+    }
+
     @Override
     public void commandHandler() {
         String command = Controller.INPUT.nextLine();
@@ -41,6 +45,10 @@ public class TeamMenuController extends BaseController{
             String key = result.entrySet().iterator().next().getKey();
             Matcher matcher = result.get(key);
             switch (key) {
+                case "scoreboard" -> {
+                    showScoreboard();
+                    commandHandler();
+                }
 
 
 

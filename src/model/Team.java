@@ -24,6 +24,24 @@ public class Team {
         return created;
     }
 
+    public String generateScoreboard() {
+        ArrayList<User> all = new ArrayList<>(this.members);
+        all.add(this.leader);
+        all.sort(Comparator.comparing(User::getFullName));
+        all.sort(Comparator.comparing(User::getScore));
+
+        StringBuilder scoreboard = new StringBuilder();
+
+        for (int i = 0; i < all.size(); i++) {
+            User user = all.get(i);
+            scoreboard.append(i + 1).append("\t");
+            scoreboard.append(user.getFullName()).append(" : ");
+            scoreboard.append(user.getScore()).append("\n");
+        }
+
+        return scoreboard.toString();
+    }
+
     public String toString(User user) {
         StringBuilder teamInfo = new StringBuilder();
         teamInfo.append(this.name).append("\n");
