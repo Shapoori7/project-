@@ -33,6 +33,10 @@ public class TeamMenuController extends BaseController{
         this.menu.showResponse(this.team.generateScoreboard());
     }
 
+    public void showRoadmap() {
+        this.menu.showResponse(this.team.generateRoadmap());
+    }
+
     @Override
     public void commandHandler() {
         String command = Controller.INPUT.nextLine();
@@ -47,6 +51,10 @@ public class TeamMenuController extends BaseController{
             switch (key) {
                 case "scoreboard" -> {
                     showScoreboard();
+                    commandHandler();
+                }
+                case "roadmap" -> {
+                    showRoadmap();
                     commandHandler();
                 }
 

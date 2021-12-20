@@ -14,15 +14,21 @@ public class Task {
     private LocalDate deadline;
     private final ArrayList<User> assignedUsers;
     private ArrayList<String> comments;
+    private int completed;
 
     public Task() {
         this.id = UUID.randomUUID();
         this.assignedUsers = new ArrayList<>();
         this.created = LocalDate.now();
+        this.completed = 0;
     }
 
     public String getId() {
         return id.toString();
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public void setTitle(String title) {
@@ -52,6 +58,10 @@ public class Task {
 
     public ArrayList<User> getAssignedUsers() {
         return assignedUsers;
+    }
+
+    public int getCompleted() {
+        return completed;
     }
 
     public void removeUser(User user) {

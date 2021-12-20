@@ -9,11 +9,13 @@ public class Team {
     User leader;
     ArrayList<User> members;
     LocalDate created;
+    ArrayList<Task> tasks;
 
     public Team(User leader) {
         this.leader = leader;
         this.members = new ArrayList<>();
         this.created = LocalDate.now();
+        this.tasks = new ArrayList<>();
     }
 
     public String getName() {
@@ -40,6 +42,20 @@ public class Team {
         }
 
         return scoreboard.toString();
+    }
+
+    public String generateRoadmap() {
+        this.tasks.sort(Comparator.comparing(Task::getTitle));
+        this.tasks.sort(Comparator.comparing(Task::getCompleted));
+
+        StringBuilder roadmap = new StringBuilder();
+
+        for (Task task: this.tasks) {
+            roadmap.append(task.getTitle()).append(" : ");
+            roadmap.append(task.getCompleted()).append(" % done").append("\n");
+        }
+
+        return roadmap.toString();
     }
 
     public String toString(User user) {
