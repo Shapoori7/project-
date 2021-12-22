@@ -33,6 +33,18 @@ public class Board {
         return this.categories.size() == 0;
     }
 
+    public Task loadTask(String taskId) {
+        Task key = null;
+        for (Category category: this.categories) {
+            key = category.loadTask(taskId)
+            if (key != null) {
+                return key;
+            }
+        }
+
+        return null;
+    }
+
 
 
 }

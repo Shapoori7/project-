@@ -11,7 +11,17 @@ public class Category {
         this.tasks = new ArrayList<>();
     }
 
-    
+    public Task loadTask(String taskId) {
+        for (Task task: this.tasks) {
+            if (task.getId().equals(taskId)) {
+                return task;
+            }
+        }
+
+        return null;
+    }
+
+
 
 
 

@@ -36,8 +36,18 @@ public class Team implements Serializable {
         return stageOneBoard;
     }
 
-    public void addBoard(Board board) {
+    public void setStageOneBoard(Board board) {
         this.stageOneBoard = board;
+    }
+
+    public void addBoard(Board board) {
+        if (this.stageOneBoard == null) {
+            this.stageOneBoard = board;
+        }
+        else {
+            this.boards.add(board);
+        }
+        
     }
 
     public void removeBoard(String boardName) {
@@ -48,7 +58,7 @@ public class Team implements Serializable {
     }
 
     public Board loadBoard(String name) {
-        if (this.stageOneBoard.getName().equals(name)) {
+        if (this.stageOneBoard != null && this.stageOneBoard.getName().equals(name)) {
             return this.stageOneBoard;
         }
 
