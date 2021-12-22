@@ -36,16 +36,6 @@ public class Team implements Serializable {
         return stageOneBoard;
     }
 
-    public boolean boardExists(String boardName) {
-        for (Board board: this.boards) {
-            if (board.getName().equals(boardName)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public void addBoard(Board board) {
         this.stageOneBoard = board;
     }
@@ -55,6 +45,30 @@ public class Team implements Serializable {
         if (stageOneBoard.getName().equals(boardName)) {
             this.stageOneBoard = null;
         }
+    }
+
+    public Board loadBoard(String name) {
+        if (this.stageOneBoard.getName().equals(name)) {
+            return this.stageOneBoard;
+        }
+
+        for (Board board: this.boards) {
+            if (Board.getName().equals(name)) {
+                return board;
+            }
+        }
+
+        return null;
+    }
+
+    public void updateBoard(Board board) {
+        if (this.stageOneBoard.getName().equals(board.getName())) {
+            this.stageOneBoard = board;
+            return;
+        }
+
+        this.boards.removeIf(board -> board.getName().equals(board.getName()));
+        this.boards.add(board);
     }
 
     public String generateScoreboard() {

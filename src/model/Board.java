@@ -15,4 +15,15 @@ public class Board {
     public String getName() {
         return name;
     }
+
+    public boolean categoryExists(String name) {
+        return this.categories.keySet().contains(name);
+    }
+
+    public void addCategory(String name) {
+        this.categories.put(name, new ArrayList<>());
+    }
+
+
+
 }

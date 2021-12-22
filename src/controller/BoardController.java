@@ -23,7 +23,7 @@ public class BoardController extends TeamMenuController{
     public void newBoard(Matcher matcher) {
         if (leaderRequired() && stageOneChecker()) {
             String boardName = matcher.group(1);
-            if (this.team.boardExists(boardName)) {
+            if (this.team.loadBoard(boardName) != null) {
                 this.menu.showError("There is already a board with this name");
             }
             else {
@@ -53,6 +53,20 @@ public class BoardController extends TeamMenuController{
     public void newCategory(Matcher matcher) {
         String categoryName = matcher.group(1);
         String boardName = matcher.group(2);
+        if (this.team.getStageOneBoard != null && !this.team.getStageOneBoard.getName().equals(boardName)) {
+            this.menu.showError("Please finish creating the board first");
+        }
+        else {
+            Board board = this.team.loadBoard(boardName);
+            if (board.categoryExists(categoryName)) {
+                this.menu.showError("The name is already taken for a category!");
+            }
+            else {
+                board.addCategory(categoryName);
+                this.team.updateBoard(board);
+                Controller.DATA_BASE_CONTROLLER.updateTeam(this.team);
+            }
+        }
 
     }
 
