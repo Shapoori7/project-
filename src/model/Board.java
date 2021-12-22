@@ -1,15 +1,14 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Board {
     private String name;
-    private HashMap<String, ArrayList<Task>> categories;
+    private <Category> categories;
 
     public Board(String name) {
         this.name = name;
-        this.categories = new HashMap<>();
+        this.categories = new ArrayList<>();
     }
 
     public String getName() {
@@ -17,11 +16,21 @@ public class Board {
     }
 
     public boolean categoryExists(String name) {
-        return this.categories.keySet().contains(name);
+        for (Category category: this.categories) {
+            if (category.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public void addCategory(String name) {
-        this.categories.put(name, new ArrayList<>());
+    public void addCategory(Category name) {
+        Category category = new Category(name, this.categories.size());
+        this.categories.add(category);
+    }
+
+    public boolean isEmpty() {
+        return this.categories.size() == 0;
     }
 
 
