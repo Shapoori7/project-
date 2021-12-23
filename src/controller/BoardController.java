@@ -1,10 +1,12 @@
 package controller;
 
 import model.Board;
+import model.Category;
 import model.Task;
 import model.UserType;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 
@@ -64,7 +66,7 @@ public class BoardController extends TeamMenuController{
             }
             else {
                 Board board = this.team.loadBoard(boardName);
-                if (board.categoryExists(categoryName)) {
+                if (board.loadCategory(categoryName) != null) {
                     this.menu.showError("The name is already taken for a category!");
                 }
                 else {
@@ -80,6 +82,27 @@ public class BoardController extends TeamMenuController{
     }
 
     public void changeColumn(Matcher matcher) {
+        String categoryName = matcher.group(1);
+        int column = Integer.parseInt(matcher.group(2));
+        String boardName = matcher.group(3);
+
+        Board board = this.team.loadBoard(boardName);
+        ArrayList<Category> categories = board.getCategories();
+        if (categories.size() <= column || column < 0) {
+            this.menu.showError("wrong column!");
+            return;
+        }
+        Category category = board.loadCategory(categoryName);
+        categories.remove(category);
+        categories.add(column, category);
+
+        for (int index = 0 ; index < categories.size() ; index++) {
+            categories.get(index).setColumn(index);
+        }
+
+        board.setCategories(categories);
+        this.team.updateBoard(board);
+        Controller.DATA_BASE_CONTROLLER.updateTeam(this.team);
 
     }
 

@@ -15,13 +15,13 @@ public class Board {
         return name;
     }
 
-    public boolean categoryExists(String name) {
+    public Category loadCategory(String name) {
         for (Category category: this.categories) {
             if (category.getName().equals(name)) {
-                return true;
+                return category;
             }
         }
-        return false;
+        return null;
     }
 
     public void addCategory(String name) {
@@ -47,6 +47,10 @@ public class Board {
 
     public ArrayList<Category> getCategories() {
         return categories;
+    }
+
+    public void setCategories(ArrayList<Category> categories) {
+        this.categories = categories;
     }
 
 }

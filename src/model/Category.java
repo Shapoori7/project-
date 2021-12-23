@@ -31,4 +31,8 @@ public class Category {
     public String getName() {
         return name;
     }
+
+    public void setColumn(int column) {
+        this.columnNumber = column;
+    }
 }
