@@ -103,4 +103,7 @@ public class Task implements Serializable {
         return users.toString();
     }
 
+    public LocalDate getDeadline() {
+        return deadline;
+    }
 }

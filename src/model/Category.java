@@ -1,12 +1,14 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Category {
     private String name;
     private int columnNumber;
     private ArrayList<Task> tasks;
 
     public Category(String name, int number) {
-        this.naem = name;
+        this.name = name;
         this.columnNumber = number;
         this.tasks = new ArrayList<>();
     }
@@ -21,8 +23,12 @@ public class Category {
         return null;
     }
 
+    public void addTask(Task task) {
+        this.tasks.add(task);
+    }
 
 
-
-
+    public String getName() {
+        return name;
+    }
 }

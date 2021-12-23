@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Board {
     private String name;
-    private <Category> categories;
+    private ArrayList<Category> categories;
 
     public Board(String name) {
         this.name = name;
@@ -24,7 +24,7 @@ public class Board {
         return false;
     }
 
-    public void addCategory(Category name) {
+    public void addCategory(String name) {
         Category category = new Category(name, this.categories.size());
         this.categories.add(category);
     }
@@ -36,7 +36,7 @@ public class Board {
     public Task loadTask(String taskId) {
         Task key = null;
         for (Category category: this.categories) {
-            key = category.loadTask(taskId)
+            key = category.loadTask(taskId);
             if (key != null) {
                 return key;
             }
@@ -45,6 +45,8 @@ public class Board {
         return null;
     }
 
-
+    public ArrayList<Category> getCategories() {
+        return categories;
+    }
 
 }

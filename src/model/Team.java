@@ -63,7 +63,7 @@ public class Team implements Serializable {
         }
 
         for (Board board: this.boards) {
-            if (Board.getName().equals(name)) {
+            if (board.getName().equals(name)) {
                 return board;
             }
         }
@@ -71,14 +71,14 @@ public class Team implements Serializable {
         return null;
     }
 
-    public void updateBoard(Board board) {
-        if (this.stageOneBoard.getName().equals(board.getName())) {
-            this.stageOneBoard = board;
+    public void updateBoard(Board boardToUpdate) {
+        if (this.stageOneBoard.getName().equals(boardToUpdate.getName())) {
+            this.stageOneBoard = boardToUpdate;
             return;
         }
 
-        this.boards.removeIf(board -> board.getName().equals(board.getName()));
-        this.boards.add(board);
+        this.boards.removeIf(board -> board.getName().equals(boardToUpdate.getName()));
+        this.boards.add(boardToUpdate);
     }
 
     public String generateScoreboard() {

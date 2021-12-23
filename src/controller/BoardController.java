@@ -1,8 +1,10 @@
 package controller;
 
 import model.Board;
+import model.Task;
 import model.UserType;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 
@@ -42,7 +44,7 @@ public class BoardController extends TeamMenuController{
     public void removeBoard(Matcher matcher) {
         if (leaderRequired()) {
             String boardName = matcher.group(1);
-            if (!this.team.boardExists(boardName)) {
+            if (this.team.loadBoard(boardName) == null) {
                 this.menu.showError("There is no board with this name");
             }
             else {
@@ -57,7 +59,7 @@ public class BoardController extends TeamMenuController{
         if (leaderRequired()) {
             String categoryName = matcher.group(1);
             String boardName = matcher.group(2);
-            if (this.team.getStageOneBoard != null && !this.team.getStageOneBoard.getName().equals(boardName)) {
+            if (this.team.getStageOneBoard() != null && !this.team.getStageOneBoard().getName().equals(boardName)) {
                 this.menu.showError("Please finish creating the board first");
             }
             else {
@@ -105,7 +107,7 @@ public class BoardController extends TeamMenuController{
             this.menu.showError("This task has already been added to this board");
             return;
         }
-        Task task = Controller.DATA_BASE_CONTROLLER.loadTask(taskId);
+        Task task = Controller.DATA_BASE_CONTROLLER.findTaskById(taskId);
         if (task == null) {
             this.menu.showError("Invalid task id!");
             return;
@@ -121,7 +123,7 @@ public class BoardController extends TeamMenuController{
             return;
         }
 
-        board.getCategories().get(0).add(task);
+        board.getCategories().get(0).addTask(task);
         this.team.updateBoard(board);
         Controller.DATA_BASE_CONTROLLER.updateTeam(this.team);
 
