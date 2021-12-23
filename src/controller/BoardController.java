@@ -21,6 +21,7 @@ public class BoardController extends TeamMenuController{
         this.patterns.put("unstageBoard", "");
         this.patterns.put("addTask", "");
         this.patterns.put("assignTask", "");
+        this.patterns.put("moveTask", "");
 
 
     }
@@ -183,6 +184,28 @@ public class BoardController extends TeamMenuController{
         Controller.DATA_BASE_CONTROLLER.saveUser(teammate);
     }
 
+    public void moveTask(Matcher matcher) {
+        String categoryName = matcher.group(1);
+        String taskId = matcher.group(2);
+        String boardName = matcher.group(3);
+
+        Board board = this.team.loadBoard(boardName);
+        Task task = board.loadTask(taskId);
+        Category category = board.loadCategory(categoryName);
+
+        if (task == null) {
+            this.menu.showError("There is no task with given information");
+            return;
+        }
+        if (category == null) {
+            this.menu.showError("Invalid category");
+            return;
+        }
+
+        board.changeTaskCategory(task, category);
+
+    }
+
 
     public void commandHandler(String key, Matcher matcher) {
         switch (key) {
@@ -213,6 +236,10 @@ public class BoardController extends TeamMenuController{
             }
             case "assignTask" -> {
                 assignTask(matcher);
+                super.commandHandler();
+            }
+            case "moveTask" -> {
+                moveTask(matcher);
                 super.commandHandler();
             }
             

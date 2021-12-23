@@ -65,4 +65,15 @@ public class Board {
         this.categories = categories;
     }
 
+    public void changeTaskCategory(Task task, Category category) {
+        String taskId = task.getId();
+        for (Category ctg: this.categories) {
+            if (ctg.loadTask(taskId) != null) {
+                ctg.removeTask(task);
+            }
+        }
+
+        int column = this.categories.indexOf(category);
+        this.categories.get(column).addTask(task);
+    }
 }

@@ -41,4 +41,9 @@ public class Category {
         tasks.removeIf(task -> task.getId().equals(id));
         tasks.add(taskToUpdate);
     }
+
+    public void removeTask(Task taskToRemove) {
+        String id = taskToRemove.getId();
+        this.tasks.removeIf(task -> task.getId().equals(id));
+    }
 }
