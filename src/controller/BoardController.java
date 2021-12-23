@@ -1,9 +1,6 @@
 package controller;
 
-import model.Board;
-import model.Category;
-import model.Task;
-import model.UserType;
+import model.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,6 +20,7 @@ public class BoardController extends TeamMenuController{
         this.patterns.put("changeColumn", "");
         this.patterns.put("unstageBoard", "");
         this.patterns.put("addTask", "");
+        this.patterns.put("assignTask", "");
 
 
     }
@@ -152,6 +150,39 @@ public class BoardController extends TeamMenuController{
 
     }
 
+    public void assignTask(Matcher matcher) {
+        String teammateName = matcher.group(1);
+        String taskId = matcher.group(2);
+        String boardName = matcher.group(3);
+
+        Board board = this.team.loadBoard(boardName);
+        User teammate = this.team.loadUser(teammateName);
+        Task task = board.loadTask(taskId);
+
+        if (task == null) {
+            this.menu.showError("Invalid task id");
+            return;
+        }
+        if (teammate == null) {
+            this.menu.showError("Invalid teammate");
+            return;
+        }
+        if (board.loadCategory("done").loadTask(taskId) != null) {
+            this.menu.showError("This task has already finished");
+            return;
+        }
+
+        teammate.addTask(task);
+        task.addUser(teammate);
+        board.updateTask(task);
+        this.team.updateUser(teammate);
+        this.team.updateBoard(board);
+
+        Controller.DATA_BASE_CONTROLLER.updateTeam(this.team);
+        Controller.DATA_BASE_CONTROLLER.updateTask(task);
+        Controller.DATA_BASE_CONTROLLER.saveUser(teammate);
+    }
+
 
     public void commandHandler(String key, Matcher matcher) {
         switch (key) {
@@ -178,6 +209,10 @@ public class BoardController extends TeamMenuController{
             }
             case "addTask" -> {
                 addTask(matcher);
+                super.commandHandler();
+            }
+            case "assignTask" -> {
+                assignTask(matcher);
                 super.commandHandler();
             }
             

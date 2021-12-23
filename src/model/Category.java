@@ -35,4 +35,10 @@ public class Category {
     public void setColumn(int column) {
         this.columnNumber = column;
     }
+
+    public void updateTask(Task taskToUpdate) {
+        String id = taskToUpdate.getId();
+        tasks.removeIf(task -> task.getId().equals(id));
+        tasks.add(taskToUpdate);
+    }
 }

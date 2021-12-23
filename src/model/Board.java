@@ -9,6 +9,8 @@ public class Board {
     public Board(String name) {
         this.name = name;
         this.categories = new ArrayList<>();
+        Category done = new Category("done", 0);
+        this.categories.add(done);
     }
 
     public String getName() {
@@ -43,6 +45,16 @@ public class Board {
         }
 
         return null;
+    }
+
+    public void updateTask(Task task) {
+        String id = task.getId();
+        for (Category category: categories) {
+            if (category.loadTask(id) != null) {
+                category.updateTask(task);
+                return;
+            }
+        }
     }
 
     public ArrayList<Category> getCategories() {

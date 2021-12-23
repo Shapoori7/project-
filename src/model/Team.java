@@ -193,4 +193,26 @@ public class Team implements Serializable {
         return teamInfo.toString();
     }
 
+    public User loadUser(String name) {
+        if (leader.getFullName().equals(name)) {
+            return leader;
+        }
+        for (User user: members) {
+            if (user.getFullName().equals(name)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public void updateUser(User user) {
+        String name = user.getFullName();
+        if (leader.getFullName().equals(name)) {
+            this.leader = user;
+            return;
+        }
+        members.removeIf(member -> member.getFullName().equals(name));
+        this.members.add(user);
+
+    }
 }
