@@ -5,6 +5,7 @@ import model.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.regex.Matcher;
 
 public class BoardController extends TeamMenuController{
@@ -25,8 +26,7 @@ public class BoardController extends TeamMenuController{
         this.patterns.put("moveNext", "");
         this.patterns.put("doneOrFailed", "");
         this.patterns.put("reopen", "");
-
-
+        this.patterns.put("showBoard", "");
     }
 
     public void newBoard(Matcher matcher) {
@@ -51,7 +51,15 @@ public class BoardController extends TeamMenuController{
             this.menu.showError("There is no board with this name");
         }
         else {
+            Board board = this.team.loadBoard(boardName);
+            for (Category category: board.getCategories()) {
+                for (Task task: category.getTasks()) {
+                    this.team.removeTask(task);
+                }
+            }
             this.team.removeBoard(boardName);
+            Controller.DATA_BASE_CONTROLLER.updateTeam(this.team);
+            // tasks should be removed from db and assigned users should be updated
         }
 
     }
@@ -139,6 +147,7 @@ public class BoardController extends TeamMenuController{
 
         board.getCategories().get(0).addTask(task);
         this.team.updateBoard(board);
+        this.team.addTask(task);
         Controller.DATA_BASE_CONTROLLER.updateTeam(this.team);
 
     }
@@ -316,67 +325,60 @@ public class BoardController extends TeamMenuController{
         Controller.DATA_BASE_CONTROLLER.updateTask(task);
     }
 
+    public void showBoard(Matcher matcher) {
+        String boardName = matcher.group(1);
+        Board board = this.team.loadBoard(boardName);
+        this.menu.showResponse(board.toString());
+    }
+
 
     public void commandHandler(String key, Matcher matcher) {
         switch (key) {
             case "newBoard" -> {
                 if (leaderRequired())
                     newBoard(matcher);
-                super.commandHandler();
             }
             case "removeBoard" -> {
                 if (leaderRequired())
                     removeBoard(matcher);
-                super.commandHandler();
             }
             case "newCategory" -> {
                 if (leaderRequired())
                     newCategory(matcher);
-                super.commandHandler();
             }
             case "changeColumn" -> {
                 if (leaderRequired())
                     changeColumn(matcher);
-                super.commandHandler();
-
             }
             case "unstageBoard" -> {
                 if (leaderRequired())
                     unstageBoard();
-                super.commandHandler();
             }
             case "addTask" -> {
                 if (leaderRequired())
                     addTask(matcher);
-                super.commandHandler();
             }
             case "assignTask" -> {
                 if (leaderRequired())
                     assignTask(matcher);
-                super.commandHandler();
             }
             case "moveTask" -> {
                 if (leaderRequired())
                     moveTask(matcher);
-                super.commandHandler();
             }
-            case "moveNext" -> {
-                moveNext(matcher);
-                super.commandHandler();
-            }
+            case "moveNext" -> moveNext(matcher);
+
             case "doneOrFailed" -> {
                 if (leaderRequired())
                     doneOrFailed(matcher);
-                super.commandHandler();
             }
             case "reopen" -> {
                 if (leaderRequired())
                     reopenTask(matcher);
-                super.commandHandler();
             }
-            
-
+            case "showBoard" -> showBoard(matcher);
         }
+        super.commandHandler();
 
     }
 
@@ -397,4 +399,11 @@ public class BoardController extends TeamMenuController{
         return true;
     }
 
+    public Set<String> getPatternsNames() {
+        return this.patterns.keySet();
+    }
+
+    public HashMap<String, String> getPatterns() {
+        return patterns;
+    }
 }

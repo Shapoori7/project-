@@ -23,6 +23,7 @@ public class TeamMenuController extends BaseController{
         this.patterns.put("showTasks", "show tasks");
         this.patterns.put("showTask", "");
         this.patterns.putAll(Controller.TASK.getPatterns());
+        this.patterns.putAll(Controller.BOARD.getPatterns());
 
         this.menu = new TeamMenu();
 
@@ -103,6 +104,10 @@ public class TeamMenuController extends BaseController{
                 default -> {
                     if (Controller.TASK.getPatternsNames().contains(key)) {
                         Controller.TASK.commandHandler(key, matcher);
+                        this.commandHandler();
+                    }
+                    else if (Controller.BOARD.getPatternsNames().contains(key)) {
+                        Controller.BOARD.commandHandler(key, matcher);
                         this.commandHandler();
                     }
                 }

@@ -1,5 +1,7 @@
 package model;
 
+import controller.Controller;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -138,31 +140,9 @@ public class Team implements Serializable {
         if (this.tasks.size() == 0) {
             return "no task yet";
         }
-        Comparator priorityComparator = new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                TaskPriority priority1 = ((Task)o1).getPriority();
-                TaskPriority priority2 = ((Task)o2).getPriority();
-
-                if (priority1.equals(priority2)) {
-                    return 1;
-                }
-                else if (priority1.equals(TaskPriority.HIGHEST)) {
-                    return 1;
-                }
-                else if (priority1.equals(TaskPriority.HIGH) && !priority2.equals(TaskPriority.HIGHEST)) {
-                    return 1;
-                }
-                else if (priority1.equals(TaskPriority.LOW) && priority2.equals(TaskPriority.LOWEST)) {
-                    return 1;
-                }
-
-                return 0;
-            }
-        };
 
         this.tasks.sort(Comparator.comparing(Task::getCreated));
-        this.tasks.sort(priorityComparator);
+        this.tasks.sort(Controller.PRIORITY_COMPARATOR);
 
         StringBuilder tasksString = new StringBuilder();
         for (Task task: this.tasks) {
@@ -215,4 +195,13 @@ public class Team implements Serializable {
         this.members.add(user);
 
     }
+
+    public void addTask(Task task) {
+        this.tasks.add(task);
+    }
+
+    public void removeTask(Task task) {
+        this.tasks.remove(task);
+    }
+
 }
