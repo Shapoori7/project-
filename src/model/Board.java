@@ -9,8 +9,8 @@ public class Board {
     public Board(String name) {
         this.name = name;
         this.categories = new ArrayList<>();
-        this.addCategory("failed");
         this.addCategory("done");
+        this.addCategory("failed");
     }
 
     public String getName() {

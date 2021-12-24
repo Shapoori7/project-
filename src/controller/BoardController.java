@@ -24,6 +24,7 @@ public class BoardController extends TeamMenuController{
         this.patterns.put("moveTask", "");
         this.patterns.put("moveNext", "");
         this.patterns.put("doneOrFailed", "");
+        this.patterns.put("reopen", "");
 
 
     }
@@ -243,6 +244,78 @@ public class BoardController extends TeamMenuController{
         this.menu.showResponse(response.toString());
     }
 
+    public void reopenTask(Matcher matcher) {
+        String fullCommand = matcher.group();
+        String taskId = matcher.group(1);
+        String deadline, boardName, teammateName, categoryName;
+
+        if (fullCommand.contains("--assign") && !fullCommand.contains("--category")) {
+            teammateName = matcher.group(2);
+            deadline = matcher.group(3);
+            categoryName = "";
+            boardName = matcher.group(4);
+        }
+        else if (fullCommand.contains("--category") && !fullCommand.contains("--assign")) {
+            teammateName = "";
+            deadline = matcher.group(2);
+            categoryName = matcher.group(3);
+            boardName = matcher.group(4);
+        }
+        else if (fullCommand.contains("--assign") && fullCommand.contains("--category")) {
+            teammateName = matcher.group(2);
+            deadline = matcher.group(3);
+            categoryName = matcher.group(4);
+            boardName = matcher.group(5);
+        }
+        else {
+            teammateName = "";
+            deadline = matcher.group(2);
+            categoryName = "";
+            boardName = matcher.group(3);
+        }
+
+        Board board = this.team.loadBoard(boardName);
+        Task task = board.loadTask(taskId);
+        if (task == null) {
+            this.menu.showError("Invalid task");
+            return;
+        }
+
+        Category failed = board.loadTaskCategory(task);
+        if (!failed.getName().equals("failed")) {
+            this.menu.showError("This task is not in failed section");
+            return;
+        }
+
+        ArrayList<Category> categories = board.getCategories();
+        if (categoryName.equals("")) {
+            categoryName = categories.get(0).getName();
+        }
+        Category category = board.loadCategory(categoryName);
+        if (category == null) {
+            this.menu.showError("Invalid category");
+            return;
+        }
+
+        if (!teammateName.equals("")) {
+            User teammate = this.team.loadUser(teammateName);
+            if (teammate == null) {
+                this.menu.showError("Invalid team member");
+                return;
+            }
+            task.addUser(teammate);
+            teammate.addTask(task);
+            Controller.DATA_BASE_CONTROLLER.saveUser(teammate);
+        }
+
+        task.setDeadline(LocalDate.parse(deadline));
+        category.addTask(task);
+        board.changeTaskCategory(task, failed, category);
+
+        Controller.DATA_BASE_CONTROLLER.updateTeam(this.team);
+        Controller.DATA_BASE_CONTROLLER.updateTask(task);
+    }
+
 
     public void commandHandler(String key, Matcher matcher) {
         switch (key) {
@@ -294,6 +367,11 @@ public class BoardController extends TeamMenuController{
             case "doneOrFailed" -> {
                 if (leaderRequired())
                     doneOrFailed(matcher);
+                super.commandHandler();
+            }
+            case "reopen" -> {
+                if (leaderRequired())
+                    reopenTask(matcher);
                 super.commandHandler();
             }
             
