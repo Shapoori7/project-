@@ -65,15 +65,20 @@ public class Board {
         this.categories = categories;
     }
 
-    public void changeTaskCategory(Task task, Category category) {
+    public Category loadTaskCategory(Task task) {
         String taskId = task.getId();
-        for (Category ctg: this.categories) {
-            if (ctg.loadTask(taskId) != null) {
-                ctg.removeTask(task);
+        for (Category category: this.categories) {
+            if (category.loadTask(taskId) != null) {
+                return category;
             }
         }
+        return null;
+    }
 
-        int column = this.categories.indexOf(category);
-        this.categories.get(column).addTask(task);
+    public void changeTaskCategory(Task task, Category categoryToRemove, Category categoryToMove) {
+        int column1 = this.categories.indexOf(categoryToRemove);
+        this.categories.get(column1).removeTask(task);
+        int column2 = this.categories.indexOf(categoryToMove);
+        this.categories.get(column2).addTask(task);
     }
 }

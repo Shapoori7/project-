@@ -22,12 +22,13 @@ public class BoardController extends TeamMenuController{
         this.patterns.put("addTask", "");
         this.patterns.put("assignTask", "");
         this.patterns.put("moveTask", "");
+        this.patterns.put("moveNext", "");
 
 
     }
 
     public void newBoard(Matcher matcher) {
-        if (leaderRequired() && stageOneChecker()) {
+        if (stageOneChecker()) {
             String boardName = matcher.group(1);
             if (this.team.loadBoard(boardName) != null) {
                 this.menu.showError("There is already a board with this name");
@@ -43,40 +44,33 @@ public class BoardController extends TeamMenuController{
     }
 
     public void removeBoard(Matcher matcher) {
-        if (leaderRequired()) {
-            String boardName = matcher.group(1);
-            if (this.team.loadBoard(boardName) == null) {
-                this.menu.showError("There is no board with this name");
-            }
-            else {
-                this.team.removeBoard(boardName);
-            }
-
+        String boardName = matcher.group(1);
+        if (this.team.loadBoard(boardName) == null) {
+            this.menu.showError("There is no board with this name");
+        }
+        else {
+            this.team.removeBoard(boardName);
         }
 
     }
 
     public void newCategory(Matcher matcher) {
-        if (leaderRequired()) {
-            String categoryName = matcher.group(1);
-            String boardName = matcher.group(2);
-            if (this.team.getStageOneBoard() != null && !this.team.getStageOneBoard().getName().equals(boardName)) {
-                this.menu.showError("Please finish creating the board first");
+        String categoryName = matcher.group(1);
+        String boardName = matcher.group(2);
+        if (this.team.getStageOneBoard() != null && !this.team.getStageOneBoard().getName().equals(boardName)) {
+            this.menu.showError("Please finish creating the board first");
+        }
+        else {
+            Board board = this.team.loadBoard(boardName);
+            if (board.loadCategory(categoryName) != null) {
+                this.menu.showError("The name is already taken for a category!");
             }
             else {
-                Board board = this.team.loadBoard(boardName);
-                if (board.loadCategory(categoryName) != null) {
-                    this.menu.showError("The name is already taken for a category!");
-                }
-                else {
-                    board.addCategory(categoryName);
-                    this.team.updateBoard(board);
-                    Controller.DATA_BASE_CONTROLLER.updateTeam(this.team);
-                }
+                board.addCategory(categoryName);
+                this.team.updateBoard(board);
+                Controller.DATA_BASE_CONTROLLER.updateTeam(this.team);
             }
-
         }
-    
 
     }
 
@@ -106,18 +100,14 @@ public class BoardController extends TeamMenuController{
     }
 
     public void unstageBoard() {
-        if (leaderRequired()) {
-            Board stagedBoard = this.team.getStageOneBoard();
-            if (stagedBoard.isEmpty()) {
-                this.menu.showError("Please make a category first");
-            }
-            else {
-                this.team.addBoard(stagedBoard);
-                this.team.setStageOneBoard(null);
-            }
+        Board stagedBoard = this.team.getStageOneBoard();
+        if (stagedBoard.isEmpty()) {
+            this.menu.showError("Please make a category first");
         }
-        
-
+        else {
+            this.team.addBoard(stagedBoard);
+            this.team.setStageOneBoard(null);
+        }
     }
 
     public void addTask(Matcher matcher) {
@@ -202,44 +192,86 @@ public class BoardController extends TeamMenuController{
             return;
         }
 
-        board.changeTaskCategory(task, category);
+        Category currentCategory = board.loadTaskCategory(task);
+        board.changeTaskCategory(task, currentCategory, category);
+    }
 
+    public void moveNext(Matcher matcher) {
+        String taskId = matcher.group(1);
+        String boardName = matcher.group(2);
+        Board board = this.team.loadBoard(boardName);
+        Task task = board.loadTask(taskId);
+        UserType type = client.getType();
+
+        if (task == null) {
+            this.menu.showError("Invalid task!");
+            return;
+        }
+
+        if (!type.equals(UserType.LEADER)) {
+            if (!task.getAssignedUsers().contains(client)) {
+                this.menu.showError("This task is not assigned to you");
+                return;
+            }
+        }
+
+        Category current = board.loadTaskCategory(task);
+        ArrayList<Category> categories = board.getCategories();
+        int currentColumn = categories.indexOf(current);
+        if (currentColumn == categories.size() - 1) {
+            return;
+        }
+
+        Category next = categories.get(currentColumn + 1);
+        board.changeTaskCategory(task, current, next);
     }
 
 
     public void commandHandler(String key, Matcher matcher) {
         switch (key) {
             case "newBoard" -> {
-                newBoard(matcher);
+                if (leaderRequired())
+                    newBoard(matcher);
                 super.commandHandler();
             }
             case "removeBoard" -> {
-                removeBoard(matcher);
+                if (leaderRequired())
+                    removeBoard(matcher);
                 super.commandHandler();
             }
             case "newCategory" -> {
-                newCategory(matcher);
+                if (leaderRequired())
+                    newCategory(matcher);
                 super.commandHandler();
             }
             case "changeColumn" -> {
-                changeColumn(matcher);
+                if (leaderRequired())
+                    changeColumn(matcher);
                 super.commandHandler();
 
             }
             case "unstageBoard" -> {
-                unstageBoard();
+                if (leaderRequired())
+                    unstageBoard();
                 super.commandHandler();
             }
             case "addTask" -> {
-                addTask(matcher);
+                if (leaderRequired())
+                    addTask(matcher);
                 super.commandHandler();
             }
             case "assignTask" -> {
-                assignTask(matcher);
+                if (leaderRequired())
+                    assignTask(matcher);
                 super.commandHandler();
             }
             case "moveTask" -> {
-                moveTask(matcher);
+                if (leaderRequired())
+                    moveTask(matcher);
+                super.commandHandler();
+            }
+            case "moveNext" -> {
+                moveNext(matcher);
                 super.commandHandler();
             }
             
