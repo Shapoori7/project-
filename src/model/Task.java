@@ -17,8 +17,10 @@ public class Task implements Serializable {
     private final ArrayList<User> assignedUsers;
     private ArrayList<String> comments;
     private int completed;
+    private String nameOfTeam;
 
-    public Task() {
+    public Task(String nameOfTeam) {
+        this.nameOfTeam = nameOfTeam;
         this.id = UUID.randomUUID();
         this.assignedUsers = new ArrayList<>();
         this.created = LocalDate.now();
@@ -105,5 +107,9 @@ public class Task implements Serializable {
 
     public LocalDate getDeadline() {
         return deadline;
+    }
+
+    public String getNameOfTeam() {
+        return nameOfTeam;
     }
 }

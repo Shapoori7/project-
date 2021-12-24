@@ -85,6 +85,10 @@ public class User implements Serializable {
         this.assignedTasks.remove(task);
     }
 
+    public ArrayList<Task> getAssignedTasks() {
+        return assignedTasks;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
