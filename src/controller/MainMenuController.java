@@ -15,6 +15,7 @@ public class MainMenuController extends BaseController {
         this.patterns.put("enterMenu", "enter\\s+menu (\\S+)");
         this.patterns.putAll(Controller.PROFILE.getPatterns());
         this.patterns.putAll(Controller.TASK.getPatterns());
+        this.patterns.putAll(Controller.CALENDAR.getPatterns());
         this.patterns.put("enterTeam", "");
 
         this.menu = new MainMenu();
@@ -46,6 +47,10 @@ public class MainMenuController extends BaseController {
                     }
                     else if (Controller.TASK.getPatternsNames().contains(key)) {
                         Controller.TASK.commandHandler(key, matcher);
+                        this.commandHandler();
+                    }
+                    else if (Controller.CALENDAR.getPatternsNames().contains(key)) {
+                        Controller.CALENDAR.commandHandler(key);
                         this.commandHandler();
                     }
                 }

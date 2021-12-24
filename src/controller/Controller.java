@@ -15,6 +15,7 @@ public interface Controller {
     ProfileController PROFILE = new ProfileController();
     TaskController TASK = new TaskController();
     BoardController BOARD = new BoardController();
+    CalendarController CALENDAR = new CalendarController();
 
     Comparator PRIORITY_COMPARATOR = new Comparator() {
         @Override
