@@ -23,6 +23,7 @@ public class BoardController extends TeamMenuController{
         this.patterns.put("assignTask", "");
         this.patterns.put("moveTask", "");
         this.patterns.put("moveNext", "");
+        this.patterns.put("doneOrFailed", "");
 
 
     }
@@ -226,6 +227,22 @@ public class BoardController extends TeamMenuController{
         board.changeTaskCategory(task, current, next);
     }
 
+    public void doneOrFailed(Matcher matcher) {
+        String nameOfCategory = matcher.group(1);
+        String boardName = matcher.group(2);
+        Board board = this.team.loadBoard(boardName);
+        Category category = board.loadCategory(nameOfCategory);
+
+        StringBuilder response = new StringBuilder();
+
+        for (Task task: category.getTasks()) {
+            response.append(task.toString());
+            response.append("\n");
+        }
+
+        this.menu.showResponse(response.toString());
+    }
+
 
     public void commandHandler(String key, Matcher matcher) {
         switch (key) {
@@ -272,6 +289,11 @@ public class BoardController extends TeamMenuController{
             }
             case "moveNext" -> {
                 moveNext(matcher);
+                super.commandHandler();
+            }
+            case "doneOrFailed" -> {
+                if (leaderRequired())
+                    doneOrFailed(matcher);
                 super.commandHandler();
             }
             
