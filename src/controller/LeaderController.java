@@ -17,17 +17,24 @@ public class LeaderController extends MainMenuController{
 
         this.patterns = new HashMap<>();
         this.patterns.put("showTeams", "show --teams");
+        this.patterns.put("showTeam", "");
 
     }
 
-
-    public void showTeams() {
+    private ArrayList<Team> loadLeaderTeams() {
         ArrayList<Team> leaderTeams = new ArrayList<>();
         for (Team team: Controller.DATA_BASE_CONTROLLER.loadTeamsList()) {
             if (team.getLeader().equals(client)) {
                 leaderTeams.add(team);
             }
         }
+
+        return leaderTeams;
+    }
+
+
+    public void showTeams() {
+        ArrayList<Team> leaderTeams = loadLeaderTeams();
 
         if (leaderTeams.size() == 0) {
             this.menu.showError("There is no team for you!");
@@ -46,12 +53,37 @@ public class LeaderController extends MainMenuController{
         this.menu.showResponse(response);
     }
 
+    private Team getTeamByName(String teamName) {
+        for (Team Team: loadLeaderTeams()) {
+            if (team.getName().equals(teamName)) {
+                return team;
+            }
+        }
+
+        return null;
+    }
+
+    public void showTeam(Matcher matcher) {
+        String teamName = matcher.group(1);
+        Team team = getTeamByName(teamName);
+
+        if (team == null) {
+            this.menu.showError("Team not found!");
+            return;
+        }
+
+        this.menu.showResponse(team.toString());
+    }
+
     
 
     public void commandHandler(String key, Matcher matcher) {
         switch (key) {
             case "showTeams" -> {
                 showTeams();
+            }
+            case "showTeam" -> {
+                showTeam(matcher);
             }
             
         }
