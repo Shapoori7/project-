@@ -116,7 +116,7 @@ public class DataBaseController {
     }
 
     // handle team model in database
-    private ArrayList<Team> loadTeamsList() {
+    public ArrayList<Team> loadTeamsList() {
         File f = new File("src/db/Teams.txt");
 
         try(FileInputStream fis = new FileInputStream(f);

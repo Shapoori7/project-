@@ -204,4 +204,8 @@ public class Team implements Serializable {
         this.tasks.remove(task);
     }
 
+    public User getLeader() {
+        return this.leader;
+    }
+
 }
