@@ -216,4 +216,9 @@ public class Team implements Serializable {
     public ArrayList<Board> getBoards() {
         return boards;
     }
+
+    public ArrayList<User> getMembers() {
+        return members;
+    }
+
 }

@@ -3,6 +3,7 @@ package controller;
 import model.Board;
 import model.Category;
 import model.Task;
+import model.User;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,6 +23,7 @@ public class TeamMenuLeaderController extends TeamMenuController{
         this.patterns = new HashMap<>();
         this.patterns.put("showAllTasks", "show --all --tasks");
         this.patterns.put("createTask", "");
+        this.patterns.put("showMembers", "show --members");
 
     }
 
@@ -103,11 +105,21 @@ public class TeamMenuLeaderController extends TeamMenuController{
         Controller.DATA_BASE_CONTROLLER.updateTeam(this.team);
     }
 
+    public void showMembers() {
+        StringBuilder membersNames = new StringBuilder();
+        for (User usr: this.team.getMembers()) {
+            membersNames.append(usr.getFullName()).append("\n");
+        }
+
+        this.menu.showResponse(membersNames.toString());
+    }
+
 
     public void commandHandler(String key, Matcher matcher) {
         switch (key) {
             case "showAllTasks" -> showAllTasks();
             case "createTask" -> createTask(matcher);
+            case "showMembers" -> showMembers();
 
         }
 
