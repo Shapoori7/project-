@@ -9,10 +9,10 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LeaderController extends MainMenuController{
+public class MainMenuLeaderController extends MainMenuController{
     private final HashMap<String, String> patterns;
 
-    public LeaderController() {
+    public MainMenuLeaderController() {
         super();
 
         this.patterns = new HashMap<>();
@@ -32,7 +32,6 @@ public class LeaderController extends MainMenuController{
 
         return leaderTeams;
     }
-
 
     public void showTeams() {
         ArrayList<Team> leaderTeams = loadLeaderTeams();
@@ -76,8 +75,10 @@ public class LeaderController extends MainMenuController{
         this.menu.showResponse(team.toString());
     }
 
-    private boolean validTeamName(String name) {
-        return true;
+    private boolean validTeamName(String teamName) {
+        Pattern pattern = Pattern.compile("(^[a-zA-Z])([a-zA-Z0-9])*");
+
+        return teamName != null && teamName.length() >= 5 && teamName.length() <= 12 && pattern.matcher(teamName).matches();
     }
 
     public void createTeam(Matcher matcher) {
@@ -87,25 +88,21 @@ public class LeaderController extends MainMenuController{
             return;
         }
 
+        if (!validTeamName(teamName)) {
+            this.menu.showError("Team name is invalid!");
+            return;
+        }
+
         Team team = new Team(client, teamName);
-
-
+        Controller.DATA_BASE_CONTROLLER.updateTeam(team);
+        this.menu.showResponse("Team created successfully! Waiting For Admin’s confirmation…");
     }
-
-    
 
     public void commandHandler(String key, Matcher matcher) {
         switch (key) {
-            case "showTeams" -> {
-                showTeams();
-            }
-            case "showTeam" -> {
-                showTeam(matcher);
-            }
-            case "createTeam" -> {
-                createTeam(matcher);
-            }
-            
+            case "showTeams" -> showTeams();
+            case "showTeam" -> showTeam(matcher);
+            case "createTeam" -> createTeam(matcher);
         }
 
     }

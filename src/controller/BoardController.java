@@ -382,15 +382,6 @@ public class BoardController extends TeamMenuController{
 
     }
 
-
-    private boolean leaderRequired() {
-        boolean hasAccess = client.getType().equals(UserType.LEADER);
-        if (!hasAccess) {
-            this.menu.showError("You do not have the permission to do this action!");
-        }
-        return hasAccess;
-    }
-
     private boolean stageOneChecker() {
         if (this.team.getStageOneBoard() != null) {
             this.menu.showError("Please finish creating the board first");

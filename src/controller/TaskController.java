@@ -141,14 +141,6 @@ public class TaskController extends MainMenuController{
 
     }
 
-    private boolean leaderRequired() {
-        boolean hasAccess = client.getType().equals(UserType.LEADER);
-        if (!hasAccess) {
-            this.menu.showError("You Don't Have Access To Do This Action!");
-        }
-        return hasAccess;
-    }
-
     public Set<String> getPatternsNames() {
         return this.patterns.keySet();
     }

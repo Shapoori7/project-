@@ -1,6 +1,7 @@
 package controller;
 
 import model.User;
+import model.UserType;
 import view.Menu;
 
 import java.util.HashMap;
@@ -57,6 +58,14 @@ public class BaseController {
 
     public void setClient(User client) {
         this.client = client;
+    }
+
+    public boolean leaderRequired() {
+        boolean hasAccess = client.getType().equals(UserType.LEADER);
+        if (!hasAccess) {
+            this.menu.showError("You do not have the permission to do this action!");
+        }
+        return hasAccess;
     }
 
 }

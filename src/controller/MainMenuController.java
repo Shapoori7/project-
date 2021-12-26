@@ -16,6 +16,7 @@ public class MainMenuController extends BaseController {
         this.patterns.putAll(Controller.PROFILE.getPatterns());
         this.patterns.putAll(Controller.TASK.getPatterns());
         this.patterns.putAll(Controller.CALENDAR.getPatterns());
+        this.patterns.putAll(Controller.LEADER_MAIN.getPatterns());
         this.patterns.put("enterTeam", "");
 
         this.menu = new MainMenu();
@@ -52,6 +53,13 @@ public class MainMenuController extends BaseController {
                     else if (Controller.CALENDAR.getPatternsNames().contains(key)) {
                         Controller.CALENDAR.commandHandler(key);
                         this.commandHandler();
+                    }
+                    else if (Controller.LEADER_MAIN.getPatternsNames().contains(key)) {
+                        if (leaderRequired()) {
+                            Controller.LEADER_MAIN.commandHandler(key, matcher);
+                        }
+                        this.commandHandler();
+
                     }
                 }
             }
