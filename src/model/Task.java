@@ -17,7 +17,7 @@ public class Task implements Serializable {
     private final ArrayList<User> assignedUsers;
     private ArrayList<String> comments;
     private int completed;
-    private String nameOfTeam;
+    private final String nameOfTeam;
 
     public Task(String nameOfTeam) {
         this.nameOfTeam = nameOfTeam;
@@ -94,7 +94,7 @@ public class Task implements Serializable {
                 '}';
     }
 
-    private String usersToString() {
+    public String usersToString() {
         assignedUsers.sort(Comparator.comparing(User::getUsername));
         StringBuilder users = new StringBuilder();
         users.append("[");

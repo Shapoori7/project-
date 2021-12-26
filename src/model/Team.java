@@ -209,4 +209,11 @@ public class Team implements Serializable {
         return this.leader;
     }
 
+    public ArrayList<Task> getTasks() {
+        return tasks;
+    }
+
+    public ArrayList<Board> getBoards() {
+        return boards;
+    }
 }
