@@ -42,20 +42,20 @@ public class LeaderController extends MainMenuController{
             return;
         }
 
-        loaderTeams.sort(Comparator.comparing(Team::getName));
-        loaderTeams.sort(Comparator.comparing(Team::getCreated));
+        leaderTeams.sort(Comparator.comparing(Team::getName));
+        leaderTeams.sort(Comparator.comparing(Team::getCreated));
 
-        String response = "";
+        StringBuilder response = new StringBuilder();
 
         for (Team team: leaderTeams) {
-            response += team.getName() += "\n";
+            response.append(team.getName()).append("\n");
         }
 
-        this.menu.showResponse(response);
+        this.menu.showResponse(response.toString());
     }
 
     private Team getTeamByName(String teamName) {
-        for (Team Team: loadLeaderTeams()) {
+        for (Team team: loadLeaderTeams()) {
             if (team.getName().equals(teamName)) {
                 return team;
             }
