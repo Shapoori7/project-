@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.ArrayList;
 
@@ -19,12 +20,14 @@ public class Task implements Serializable {
     private int completed;
     private final String nameOfTeam;
 
-    public Task(String nameOfTeam) {
+    public Task(String nameOfTeam, String title, LocalDate created, LocalDate deadline) {
         this.nameOfTeam = nameOfTeam;
+        this.title = title;
         this.id = UUID.randomUUID();
         this.assignedUsers = new ArrayList<>();
-        this.created = LocalDate.now();
+        this.created = Objects.requireNonNullElseGet(created, LocalDate::now);
         this.completed = 0;
+        this.deadline = deadline;
     }
 
     public String getId() {
