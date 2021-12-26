@@ -18,6 +18,7 @@ public class LeaderController extends MainMenuController{
         this.patterns = new HashMap<>();
         this.patterns.put("showTeams", "show --teams");
         this.patterns.put("showTeam", "");
+        this.patterns.put("createTeam", "");
 
     }
 
@@ -75,6 +76,22 @@ public class LeaderController extends MainMenuController{
         this.menu.showResponse(team.toString());
     }
 
+    private boolean validTeamName(String name) {
+        return true;
+    }
+
+    public void createTeam(Matcher matcher) {
+        String teamName = matcher.group(1);
+        if (Controller.DATA_BASE_CONTROLLER.findTeamByName(teamName) != null) {
+            this.menu.showError("There is another team with this name!");
+            return;
+        }
+
+        Team team = new Team(client, teamName);
+
+
+    }
+
     
 
     public void commandHandler(String key, Matcher matcher) {
@@ -84,6 +101,9 @@ public class LeaderController extends MainMenuController{
             }
             case "showTeam" -> {
                 showTeam(matcher);
+            }
+            case "createTeam" -> {
+                createTeam(matcher);
             }
             
         }

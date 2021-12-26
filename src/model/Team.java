@@ -17,8 +17,9 @@ public class Team implements Serializable {
     ArrayList<Board> boards;
     Board stageOneBoard;
 
-    public Team(User leader) {
+    public Team(User leader, String name) {
         this.leader = leader;
+        this.name = name;
         this.members = new ArrayList<>();
         this.created = LocalDate.now();
         this.tasks = new ArrayList<>();
