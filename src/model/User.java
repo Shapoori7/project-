@@ -108,4 +108,9 @@ public class User implements Serializable {
                 ", score=" + score +
                 '}';
     }
+
+    public void removeTeam(Team team) {
+        this.teams.remove(team);
+    }
+
 }

@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.regex.Matcher;
 
+import javax.print.DocFlavor.STRING;
+
 public class TeamMenuLeaderController extends TeamMenuController{
     private final HashMap<String, String> patterns;
 
@@ -29,6 +31,7 @@ public class TeamMenuLeaderController extends TeamMenuController{
         this.patterns.put("deleteMember", "");
         this.patterns.put("suspendMember", "");
         this.patterns.put("promoteMember", "");
+        this.patterns.put("assignMember", "");
 
     }
 
@@ -148,24 +151,80 @@ public class TeamMenuLeaderController extends TeamMenuController{
         String username = matcher.group(1);
         if (checkUserExists(username)) {
             String rate = matcher.group(2);
+            UserType newRate = UserType.valueOf(rate);
             User user = Controller.DATA_BASE_CONTROLLER.findUserByUsername(username);
-            user.setType(UserType.valueOf(rate));
+
+            user.setType(newRate);
             this.team.updateUser(user);
 
             Controller.DATA_BASE_CONTROLLER.saveUser(user);
             Controller.DATA_BASE_CONTROLLER.updateTeam(this.team);
+
+            if (newRate.equals(UserType.LEADER)) {
+                this.client.removeTeam(this.team);;
+                this.team.deleteMember(client.getUsername());
+                Controller.DATA_BASE_CONTROLLER.saveUser(client);
+                showMenu("MainMenu");
+            }
+            else {
+                super.commandHandler();
+            }
+
+        }
+    }
+
+    public void assignMember(Matcher matcher) {
+        String username = matcher.group(2);
+        if (checkUserExists(username)) {
+            String taskId = matcher.group(1);
+            Task task = this.team.loadTask(taskId);
+            if (task == null) {
+                this.menu.showError("No Task exists with this id!");
+                return;
+            }
+            User user = this.team.loadUser(username);
+            task.addUser(user);
+            user.addTask(task);
+
+            Controller.DATA_BASE_CONTROLLER.updateTask(task);
+            Controller.DATA_BASE_CONTROLLER.updateTeam(team);
+            Controller.DATA_BASE_CONTROLLER.saveUser(user);
+
+            this.menu.showResponse("Member Assigned Successfully!");
         }
     }
 
     public void commandHandler(String key, Matcher matcher) {
         switch (key) {
-            case "showAllTasks" -> showAllTasks();
-            case "createTask" -> createTask(matcher);
-            case "showMembers" -> showMembers();
-            case "addMember" -> addMember(matcher);
-            case "deleteMember" -> deleteMember(matcher);
-            case "suspendMember" -> suspendMember(matcher);
+            case "showAllTasks" -> {
+                showAllTasks();
+                super.commandHandler();
+            }
+            case "createTask" -> {
+                createTask(matcher);
+                super.commandHandler();
+            }
+            case "showMembers" -> {
+                showMembers();
+                super.commandHandler();
+            }
+            case "addMember" -> {
+                addMember(matcher);
+                super.commandHandler();
+            }
+            case "deleteMember" -> {
+                deleteMember(matcher);
+                super.commandHandler();
+            }
+            case "suspendMember" -> {
+                suspendMember(matcher);
+                super.commandHandler();
+            }
             case "promoteMember" -> promoteMember(matcher);
+            case "assignMember" -> {
+                assignMember(matcher);
+                super.commandHandler();
+            }
 
         }
 
