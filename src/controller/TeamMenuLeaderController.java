@@ -4,6 +4,7 @@ import model.Board;
 import model.Category;
 import model.Task;
 import model.User;
+import model.UserType;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,6 +27,8 @@ public class TeamMenuLeaderController extends TeamMenuController{
         this.patterns.put("showMembers", "show --members");
         this.patterns.put("addMember", "");
         this.patterns.put("deleteMember", "");
+        this.patterns.put("suspendMember", "");
+        this.patterns.put("promoteMember", "");
 
     }
 
@@ -125,12 +128,33 @@ public class TeamMenuLeaderController extends TeamMenuController{
             return;
         }
 
-        this.team.updateUser(user);
     }
 
     public void deleteMember(Matcher matcher) {
         String username = matcher.group(1);
-        this.team.deleteMember(username);
+        if (checkUserExists(username)) {
+            this.team.deleteMember(username);
+        }
+    }
+
+    public void suspendMember(Matcher matcher) {
+        String username = matcher.group(1);
+        if (checkUserExists(username)) {
+
+        }
+    }
+
+    public void promoteMember(Matcher matcher) {
+        String username = matcher.group(1);
+        if (checkUserExists(username)) {
+            String rate = matcher.group(2);
+            User user = Controller.DATA_BASE_CONTROLLER.findUserByUsername(username);
+            user.setType(UserType.valueOf(rate));
+            this.team.updateUser(user);
+
+            Controller.DATA_BASE_CONTROLLER.saveUser(user);
+            Controller.DATA_BASE_CONTROLLER.updateTeam(this.team);
+        }
     }
 
     public void commandHandler(String key, Matcher matcher) {
@@ -140,6 +164,8 @@ public class TeamMenuLeaderController extends TeamMenuController{
             case "showMembers" -> showMembers();
             case "addMember" -> addMember(matcher);
             case "deleteMember" -> deleteMember(matcher);
+            case "suspendMember" -> suspendMember(matcher);
+            case "promoteMember" -> promoteMember(matcher);
 
         }
 
@@ -151,6 +177,16 @@ public class TeamMenuLeaderController extends TeamMenuController{
 
     public HashMap<String, String> getPatterns() {
         return patterns;
+    }
+
+    private boolean checkUserExists(String username) {
+        User user = this.team.loadUser(username);
+
+        if (user == null) {
+            this.menu.showError("No user exists with this username!");
+            return false;
+        }
+        return true;
     }
 
 }
