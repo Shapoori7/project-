@@ -24,6 +24,7 @@ public class TeamMenuLeaderController extends TeamMenuController{
         this.patterns.put("showAllTasks", "show --all --tasks");
         this.patterns.put("createTask", "");
         this.patterns.put("showMembers", "show --members");
+        this.patterns.put("addMember", "");
 
     }
 
@@ -112,6 +113,18 @@ public class TeamMenuLeaderController extends TeamMenuController{
         }
 
         this.menu.showResponse(membersNames.toString());
+    }
+
+    public void addMember(Matcher matcher) {
+        String username = matcher.group(1);
+        User user = Controller.DATA_BASE_CONTROLLER.findUserByUsername(username);
+
+        if (user == null) {
+            this.menu.showError("No user exists with this username!");
+            return;
+        }
+
+        this.team.updateUser(user);
     }
 
 
