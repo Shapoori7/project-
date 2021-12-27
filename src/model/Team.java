@@ -197,6 +197,15 @@ public class Team implements Serializable {
 
     }
 
+    public void deleteMember(String username) {
+        for (User user: this.members) {
+            if (user.getUsername().equals(username)) {
+                this.members.remove(user);
+                return;
+            }
+        }
+    }
+
     public void addTask(Task task) {
         this.tasks.add(task);
     }

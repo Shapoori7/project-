@@ -25,6 +25,7 @@ public class TeamMenuLeaderController extends TeamMenuController{
         this.patterns.put("createTask", "");
         this.patterns.put("showMembers", "show --members");
         this.patterns.put("addMember", "");
+        this.patterns.put("deleteMember", "");
 
     }
 
@@ -127,12 +128,18 @@ public class TeamMenuLeaderController extends TeamMenuController{
         this.team.updateUser(user);
     }
 
+    public void deleteMember(Matcher matcher) {
+        String username = matcher.group(1);
+        this.team.deleteMember(username);
+    }
 
     public void commandHandler(String key, Matcher matcher) {
         switch (key) {
             case "showAllTasks" -> showAllTasks();
             case "createTask" -> createTask(matcher);
             case "showMembers" -> showMembers();
+            case "addMember" -> addMember(matcher);
+            case "deleteMember" -> deleteMember(matcher);
 
         }
 
