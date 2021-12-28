@@ -4,6 +4,7 @@ public class Main {
     public static void main(String[] args) {
         BaseController baseController = new BaseController();
         Controller.init();
+        Controller.updatePatterns();
         baseController.showMenu("WelcomeMenu");
 
     }

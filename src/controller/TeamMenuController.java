@@ -22,11 +22,14 @@ public class TeamMenuController extends BaseController{
         this.patterns.put("sendMessage", "");
         this.patterns.put("showTasks", "show tasks");
         this.patterns.put("showTask", "");
-        this.patterns.putAll(Controller.TASK.getPatterns());
-        this.patterns.putAll(Controller.BOARD.getPatterns());
 
         this.menu = new TeamMenu();
 
+    }
+
+    public void updatePatterns() {
+        this.patterns.putAll(Controller.TASK.getPatterns());
+        this.patterns.putAll(Controller.BOARD.getPatterns());
     }
 
     public void setTeam(Team team) {

@@ -13,13 +13,16 @@ public class MainMenuController extends BaseController {
 
         this.patterns = new HashMap<>();
         this.patterns.put("enterMenu", "enter\\s+menu (\\S+)");
+        this.patterns.put("enterTeam", "");
+
+        this.menu = new MainMenu();
+    }
+
+    public void updatePatterns() {
         this.patterns.putAll(Controller.PROFILE.getPatterns());
         this.patterns.putAll(Controller.TASK.getPatterns());
         this.patterns.putAll(Controller.CALENDAR.getPatterns());
         this.patterns.putAll(Controller.LEADER_MAIN.getPatterns());
-        this.patterns.put("enterTeam", "");
-
-        this.menu = new MainMenu();
     }
 
     private void enterTeam(Matcher matcher) {

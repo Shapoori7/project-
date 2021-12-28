@@ -47,4 +47,9 @@ public interface Controller {
         CONTROLLERS.put("TeamMenu", new TeamMenuController());
     }
 
+    static void updatePatterns() {
+        ((MainMenuController) CONTROLLERS.get("MainMenu")).updatePatterns();
+        ((TeamMenuController) CONTROLLERS.get("TeamMenu")).updatePatterns();
+    }
+
 }
