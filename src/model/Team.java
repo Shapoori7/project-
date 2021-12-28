@@ -8,16 +8,17 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Team implements Serializable {
-    String name;
-    User leader;
-    ArrayList<User> members;
-    LocalDate created;
-    ArrayList<Task> tasks;
-    ArrayList<Message> messages;
-    ArrayList<Board> boards;
-    Board stageOneBoard;
+    private String name;
+    private User leader;
+    private ArrayList<User> members;
+    private LocalDate created;
+    private ArrayList<Task> tasks;
+    private ArrayList<Message> messages;
+    private ArrayList<Board> boards;
+    private Board stageOneBoard;
+    private TeamStatus status;
 
-    public Team(User leader, String name) {
+    public Team(User leader, String name, TeamStatus status) {
         this.leader = leader;
         this.name = name;
         this.members = new ArrayList<>();
@@ -25,6 +26,7 @@ public class Team implements Serializable {
         this.tasks = new ArrayList<>();
         this.messages = new ArrayList<>();
         this.boards = new ArrayList<>();
+        this.status = status;
     }
 
     public String getName() {
@@ -237,6 +239,14 @@ public class Team implements Serializable {
             }
         }
         return null;
+    }
+
+    public TeamStatus getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(TeamStatus status) {
+        this.status = status;
     }
 
 }

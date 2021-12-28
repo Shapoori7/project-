@@ -1,6 +1,7 @@
 package controller;
 
 import model.Team;
+import model.TeamStatus;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -93,7 +94,7 @@ public class MainMenuLeaderController extends MainMenuController{
             return;
         }
 
-        Team team = new Team(client, teamName);
+        Team team = new Team(client, teamName, TeamStatus.PENDING);
         Controller.DATA_BASE_CONTROLLER.updateTeam(team);
         this.menu.showResponse("Team created successfully! Waiting For Admin’s confirmation…");
     }

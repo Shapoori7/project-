@@ -11,7 +11,7 @@ import java.util.Objects;
 public class DataBaseController {
 
     // handle user model in database
-    private ArrayList<User> loadUsersList() {
+    public ArrayList<User> loadUsersList() {
         File f = new File("src/db/Users.txt");
 
         try(FileInputStream fis = new FileInputStream(f);
@@ -65,6 +65,27 @@ public class DataBaseController {
 
         // todo: all tasks assigned to the updated user should be updated!
 
+    }
+
+    public void removeUser(User user) {
+        ArrayList<User> users = loadUsersList();
+        users.remove(user);
+
+        updateAllUsers(users);
+    }
+
+    public void updateAllUsers(ArrayList<User> users) {
+        File f = new File("src/db/Users.txt");
+
+        try(FileOutputStream fos = new FileOutputStream(f);
+            ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(users);
+
+        }
+        catch (IOException e) {
+            System.err.println("couldn't open the file");
+
+        }
     }
 
     // handle task model in database
@@ -160,6 +181,23 @@ public class DataBaseController {
         }
 
         // todo: update users assigned to this team
+    }
+
+    public void removeTeam(Team team) {
+        ArrayList<Team> teams = loadTeamsList();
+        teams.remove(team);
+
+        File f = new File("src/db/Teams.txt");
+
+        try(FileOutputStream fos = new FileOutputStream(f);
+            ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(teams);
+
+        }
+        catch (IOException e) {
+            System.err.println("couldn't open the file");
+
+        }
 
     }
 
