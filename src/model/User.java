@@ -17,6 +17,7 @@ public class User implements Serializable {
     private final ArrayList<String> logs;
     private ArrayList<Task> assignedTasks;
     private ArrayList<Team> teams;
+    private ArrayList<Message> notifications;
 
     public User(String username, String password, String email) {
         this.username = username;
@@ -25,6 +26,7 @@ public class User implements Serializable {
         this.logs = new ArrayList<>();
         this.assignedTasks = new ArrayList<>();
         this.teams = new ArrayList<>();
+        this.notifications = new ArrayList<>();
     }
 
     public String getPassword() {
@@ -111,6 +113,19 @@ public class User implements Serializable {
 
     public void removeTeam(Team team) {
         this.teams.remove(team);
+    }
+
+    public String showNotifications() {
+        StringBuilder notif = new StringBuilder();
+        for (Message msg: this.notifications) {
+            notif.append(msg.toString()).append("\n");
+        }
+
+        return notif.toString();
+    }
+
+    public void addNotification(Message message) {
+        this.notifications.add(message);
     }
 
 }

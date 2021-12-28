@@ -2,7 +2,9 @@ package controller;
 
 import model.Board;
 import model.Category;
+import model.Message;
 import model.Task;
+import model.Team;
 import model.User;
 import model.UserType;
 
@@ -14,8 +16,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.regex.Matcher;
-
-import javax.print.DocFlavor.STRING;
 
 public class TeamMenuLeaderController extends TeamMenuController{
     private final HashMap<String, String> patterns;
@@ -32,6 +32,9 @@ public class TeamMenuLeaderController extends TeamMenuController{
         this.patterns.put("suspendMember", "");
         this.patterns.put("promoteMember", "");
         this.patterns.put("assignMember", "");
+        this.patterns.put("showScoreBoard", "show --scoreboard");
+        this.patterns.put("sendMessageToMember", "");
+        this.patterns.put("sendMessageToTeam", "");
 
     }
 
@@ -194,6 +197,45 @@ public class TeamMenuLeaderController extends TeamMenuController{
         }
     }
 
+    public void showScoreBoard() {
+        if (this.team.getMembers().size() == 0) {
+            this.menu.showError("There is no member in this team!");
+            return;
+        }
+        super.showScoreboard();
+    }
+
+    public void sendMessageToMember(Matcher matcher) {
+        String username = matcher.group(2);
+        if (checkUserExists(username)) {
+            String notifContent = matcher.group(1);
+            Message message = new Message(client.getUsername(), notifContent);
+            User reciever = Controller.DATA_BASE_CONTROLLER.findUserByUsername(username);
+            reciever.addNotification(message);
+            Controller.DATA_BASE_CONTROLLER.saveUser(reciever);
+        }
+
+    }
+
+    public void sendMessageToTeam(Matcher matcher) {
+        String teamName = matcher.group(2);
+        Team team = Controller.DATA_BASE_CONTROLLER.findTeamByName(teamName);
+
+        if (team == null) {
+            this.menu.showError("No team exists with this name!");
+            return;
+        }
+        
+        String notifContent = matcher.group(1);
+        Message message = new Message(client.getUsername(), notifContent);
+        for (User member: team.getMembers()) {
+            member.addNotification(message);
+            Controller.DATA_BASE_CONTROLLER.saveUser(member);
+
+        }
+        
+    }
+
     public void commandHandler(String key, Matcher matcher) {
         switch (key) {
             case "showAllTasks" -> {
@@ -223,6 +265,18 @@ public class TeamMenuLeaderController extends TeamMenuController{
             case "promoteMember" -> promoteMember(matcher);
             case "assignMember" -> {
                 assignMember(matcher);
+                super.commandHandler();
+            }
+            case "showScoreBoard" -> {
+                showScoreBoard();
+                super.commandHandler();
+            }
+            case "sendMessageToMember" -> {
+                sendMessageToMember(matcher);
+                super.commandHandler();
+            }
+            case "sendMessageToTeam" -> {
+                sendMessageToTeam(matcher);
                 super.commandHandler();
             }
 
